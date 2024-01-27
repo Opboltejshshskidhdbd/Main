@@ -246,108 +246,6 @@ do
             end
         end
     end})
-    local Toggle = Tabs.AutoMinigame:AddToggle("DigSite", {Title = "Auto DigSites", Default = false})
-    Toggle:OnChanged(function()
-        Toggle = Options.DigSite.Value
-        Stepped:Connect(function()
-            if Toggle then
-                VG.NoClip()
-            end
-        end)
-        spawn(function()
-            while wait(10) and Toggle do -- game force kicks you out of the mini games every 20 minutes to pervent autofarms soo we do a little trolling
-                    print(GetBlock(), GetBlock())
-                    User:SendMouseButtonEvent(0,0, 0, true, game, 0)
-                    User:SendMouseButtonEvent(0,0, 1, true, game, 0)
-                    wait(1)
-                    User:SendMouseButtonEvent(0,0, 0, false, game, 0)
-                    User:SendMouseButtonEvent(0,0, 1, false, game, 0)
-                    if Pick == "AdvancedDigsite" and (not GetBlock1() or not GetBlock()) then
-                        VG.Teleport(Vector3.new(0, 50000,0))
-                        wait(2)
-                        VG.Teleport(workspace.__THINGS.Instances.AdvancedDigsite.Teleports.Leave.Position)
-                        wait(5)
-                        VG.Teleport(Vector3.new(0,50000,0))
-                        wait(2)
-                        VG.Teleport(workspace.__THINGS.Instances.AdvancedDigsite.Teleports.Enter.Position)
-                    elseif Pick == "Digsite" and not GetBlock() then
-                        VG.Teleport(Vector3.new(0, 50000,0))
-                        wait(2)
-                        VG.Teleport(workspace.__THINGS.Instances.Digsite.Teleports.Leave.Position)
-                        wait(5)
-                        VG.Teleport(Vector3.new(0,50000,0))
-                        wait(2)
-                        VG.Teleport(workspace.__THINGS.Instances.Digsite.Teleports.Enter.Position)
-                    end
-            
-            end
-        end)
-        spawn(function()
-            while Toggle and wait() do
-                pcall(function()
-                    if GetChest1() ~= nil or GetChest() ~= nil then
-                        if Pick == "AdvancedDigsite" then
-                            VG.Tween(Player.Character.HumanoidRootPart, GetChest1():FindFirstChildWhichIsA("BasePart"), 50, Vector3.new(0,0,2), true)
-                            ReplicatedStorage:WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("AdvancedDigsite","DigChest", GetChest1():GetAttribute('Coord'))
-                            wait(3)
-                        elseif Pick == "Digsite" then
-                            VG.Tween(Player.Character.HumanoidRootPart, GetChest():FindFirstChildWhichIsA("BasePart"), 50, Vector3.new(0,0,2), true)
-                            ReplicatedStorage:WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("Digsite","DigChest", GetChest():GetAttribute('Coord'))
-                            wait(3)
-                        end
-                    elseif (GetChest1() == nil and GetBlock1() or GetBlock() and GetChest() == nil) and wait(.5) then
-                        if Pick == "AdvancedDigsite" then
-                            VG.Tween(Player.Character.HumanoidRootPart, GetBlock1(), 250, Vector3.new(0, 0, 1), true)
-                            for i=1, 6 do wait()
-                                ReplicatedStorage:WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("AdvancedDigsite", "DigBlock", GetBlock1():GetAttribute('Coord'))
-                            end
-                        elseif Pick == "Digsite" then
-                            VG.Tween(Player.Character.HumanoidRootPart, GetBlock(), 250, Vector3.new(0,1,2), true)
-                            for i=1, 6 do wait()
-                                ReplicatedStorage:WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("Digsite", "DigBlock", GetBlock():GetAttribute('Coord'))
-                            end
-                        end
-                    end
-                end)
-            end
-        end)
-    end)
-    local Toggle = Tabs.AutoMinigame:AddToggle("DigSiteAura", {Title = "Dig Aura", Default = false})
-    Toggle:OnChanged(function()
-        Digaura = Options.DigSiteAura.Value
-        spawn(function()
-            while wait(.2) and Digaura do
-                pcall(function()
-                    if Pick == "AdvancedDigsite" then 
-                        if GetChest1() then
-                            ReplicatedStorage:WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("AdvancedDigsite","DigChest", GetChest1():GetAttribute('Coord'))
-                        elseif GetBlock1() then
-                            ReplicatedStorage:WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("AdvancedDigsite", "DigBlock", GetBlock1():GetAttribute('Coord'))
-                        end
-                    elseif Pick == "Digsite" then
-                        if GetChest() then
-                            ReplicatedStorage:WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("Digsite","DigChest", GetChest():GetAttribute('Coord'))
-                        elseif GetBlock() then
-                            ReplicatedStorage:WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("Digsite", "DigBlock", GetBlock():GetAttribute('Coord'))
-                        end
-                    end
-                end)
-            end
-        end)
-    end)
-    local Dropdown = Tabs.AutoMinigame:AddDropdown("D", {
-        Title = "Digsites",
-        Values = {"Digsite", "AdvancedDigsite"},
-        Multi = false,
-        Default = 1,
-    })
-
-    Dropdown:SetValue("AdvancedDigsite")
-
-    Dropdown:OnChanged(function(Value)
-        Pick = Value
-    end)
-
 
     Tabs.Obbys:AddButton({Title = "Auto SpawnObby",Description = "Automaticly does the Start Obby",Callback = function()
         if Workspace.__THINGS.Instances.SpawnObby.Teleports.Billboard.BillboardGui:GetChildren()[1].Text == "Complete for Reward!" then
@@ -364,10 +262,7 @@ do
             wait(5)
             VG.Teleport(Workspace.__THINGS.__INSTANCE_CONTAINER.Active.JungleObby.Interactable.StartLine.Position)
             wait(.5)
-            VG.Teleport(Workspace.__THINGS.__INSTANCE_CONTAINER.Active.JungleObby.Interactable.Goal:GetModelCFrame().Position)
-        end
-    end})
-end
+    
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
 SaveManager:IgnoreThemeSettings()
@@ -388,3 +283,4 @@ Fluent:Notify({
 })
 
 SaveManager:LoadAutoloadConfig()
+end
