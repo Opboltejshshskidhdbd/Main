@@ -256,13 +256,17 @@ do
             VG.Teleport(Workspace.__THINGS.__INSTANCE_CONTAINER.Active.SpawnObby.Goal:GetModelCFrame().Position)
         end
     end})
-    Tabs.Obbys:AddButton({Title = "Auto JungleObby",Description = "Automaticly does the Jungle Obby",Callback = function()
-        if Workspace.__THINGS.Instances.JungleObby.Teleports.Billboard.BillboardGui.TextLabel.Text == "Complete for Reward!" then
-            VG.Teleport(Workspace.__THINGS.Instances.JungleObby.Teleports.Enter.Position + Vector3.new(0,5,0))
-            wait(5)
-            VG.Teleport(Workspace.__THINGS.__INSTANCE_CONTAINER.Active.JungleObby.Interactable.StartLine.Position)
-            wait(.5)
-    
+Tabs.Obbys:AddButton({Title = "Auto JungleObby",Description = "Automaticly does the Jungle Obby",Callback = function()
+    if Workspace.__THINGS.Instances.JungleObby.Teleports.Billboard.BillboardGui.TextLabel.Text == "Complete for Reward!" then
+        VG.Teleport(Workspace.__THINGS.Instances.JungleObby.Teleports.Enter.Position + Vector3.new(0,5,0))
+        wait(5)
+        VG.Teleport(Workspace.__THINGS.__INSTANCE_CONTAINER.Active.JungleObby.Interactable.StartLine.Position)
+        wait(.5)
+    end
+end})
+
+end
+
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
 SaveManager:IgnoreThemeSettings()
@@ -272,7 +276,6 @@ SaveManager:SetFolder("FluentScriptHub/specific-game")
 
 InterfaceManager:BuildInterfaceSection(Tabs.Settings)
 SaveManager:BuildConfigSection(Tabs.Settings)
-
 
 Window:SelectTab(1)
 
