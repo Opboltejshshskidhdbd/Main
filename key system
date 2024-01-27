@@ -1,0 +1,70 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "KeySystem", HidePremium = true, SaveConfig = true, ConfigFolder = "OrionTest"})
+
+OrionLib:MakeNotification({
+	Name = "welcome 🤗",
+	Content = "Welcome in My First Script",
+	Image = "rbxassetid://4483345998",
+	Time = 5
+})
+
+_G.Key = "u5kr4kfy6jg5k9go8f" -- You Put Your Key Here
+_G.KeyInput = "string"
+
+function MakeScriptHub()
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/Opboltejshshskidhdbd/Main/main/Sisyphus%20simulator"), true))()
+
+end
+
+
+function CorrectKeyNotifications()
+    OrionLib:MakeNotification({
+        Name = "Correct Key",
+        Content = "Welcome To The LEAN PARTY :D",
+        Image = "rbxassetid://4483345998",
+        Time = 5
+    })
+end
+
+function WrongKeyNotifications()
+    OrionLib:MakeNotification({
+        Name = " Wrong Key",
+        Content = "Your Not on The List Kid",
+        Image = "rbxassetid://4483345998",
+        Time = 5
+    })
+end
+
+local Tab = Window:MakeTab({
+	Name = "Key Room",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+Tab:AddLabel("Click GetKey button 🥰")
+Tab:AddTextbox({
+	Name = "Enter Key",
+	Default = "Enter Key",
+	TextDisappear = false,
+	Callback = function(Value)
+        _G.KeyInput = Value
+	end	  
+})
+Tab:AddButton({
+	Name = "Click To Get The Key",
+	Callback = function()
+setclipboard("https://link-hub.net/1057726/key")
+toclipboard("https://link-hub.net/1057726/key")
+      		print("button pressed")
+  	end    
+})
+Tab:AddButton({
+	Name = "Check Key!",
+	Callback = function()
+        if _G.KeyInput == _G.Key then
+         MakeScriptHub()
+         CorrectKeyNotifications()
+     else
+        WrongKeyNotifications()
+        end
+  	end    
+})
