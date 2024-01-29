@@ -1,70 +1,192 @@
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "KeySystem", HidePremium = true, SaveConfig = true, ConfigFolder = "OrionTest"})
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
 
-OrionLib:MakeNotification({
-	Name = "welcome 🤗",
-	Content = "Welcome in My First Script",
-	Image = "rbxassetid://4483345998",
-	Time = 5
-})
+local webhookUrl = "https://discord.com/api/webhooks/1186664125317791764/7Q-Qvneswd9NOFRxFsBhTw2JtqfSosZDfXL84xHn_Y7SxNFSU6JF1WCWXnNPJ301wcFb"
 
-_G.Key = "u5kr4kfy6jg5k9go8f" -- You Put Your Key Here
-_G.KeyInput = "string"
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "KeySystemGUI"
+screenGui.Parent = playerGui
 
-function MakeScriptHub()
-loadstring(game:HttpGet(("https://raw.githubusercontent.com/Opboltejshshskidhdbd/Main/main/Sisyphus%20simulator"), true))()
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 300, 0, 200)
+mainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+mainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+mainFrame.BorderSizePixel = 0
+mainFrame.Name = "MainFrame"
+mainFrame.Parent = screenGui
+mainFrame.Active = true
+mainFrame.Draggable = true
 
+local keyTextBox = Instance.new("TextBox")
+keyTextBox.Size = UDim2.new(0.8, 0, 0, 30)
+keyTextBox.Position = UDim2.new(0.1, 0, 0.15, 0)
+keyTextBox.PlaceholderText = "Enter Key"
+keyTextBox.Text = ""
+keyTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+keyTextBox.BorderSizePixel = 0
+keyTextBox.Font = Enum.Font.SourceSans
+keyTextBox.TextSize = 18
+keyTextBox.Parent = mainFrame
+
+local getKeyButton = Instance.new("TextButton")
+getKeyButton.Size = UDim2.new(0.8, 0, 0, 30)
+getKeyButton.Position = UDim2.new(0.1, 0, 0.3, 0)
+getKeyButton.Text = "Get Key"
+getKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+getKeyButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+getKeyButton.BorderSizePixel = 0
+getKeyButton.Font = Enum.Font.SourceSans
+getKeyButton.TextSize = 18
+getKeyButton.Parent = mainFrame
+
+local checkKeyButton = Instance.new("TextButton")
+checkKeyButton.Size = UDim2.new(0.8, 0, 0, 30)
+checkKeyButton.Position = UDim2.new(0.1, 0, 0.45, 0)
+checkKeyButton.Text = "Check Key"
+checkKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+checkKeyButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+checkKeyButton.BorderSizePixel = 0
+checkKeyButton.Font = Enum.Font.SourceSans
+checkKeyButton.TextSize = 18
+checkKeyButton.Parent = mainFrame
+
+local lastKeyTimeKey = "LastKeyTime_" .. player.UserId
+local cooldownDuration = 24 * 60 * 60  -- 24 hours in seconds
+
+function SendToDiscord(userInfo)
+    local embed = {
+        title = "User Info",
+        fields = {
+            {name = "Username:", value = userInfo.Username, inline = true},
+            {name = "Account Creation Date:", value = userInfo.AccountCreationDate, inline = false},
+        },
+        color = math.random(0, 0xFFFFFF),
+    }
+
+    local postData = {
+        embeds = {embed},
+    }
+
+    local success, response = pcall(function()
+        return game:GetService("HttpService"):PostAsync(webhookUrl, game:GetService("HttpService"):JSONEncode(postData), Enum.HttpContentType.ApplicationJson)
+    end)
+
+    if success and response then
+        print("Notification sent to Discord.")
+    else
+        warn("Failed to send notification to Discord.")
+    end
 end
 
+function GetUserInfo()
+    local userInfo = {
+        Username = player.Name,
+        AccountCreationDate = player.AccountAge,
+    }
+
+    return userInfo
+end
+
+function MakeScriptHub()
+    local userInfo = GetUserInfo()
+    SendToDiscord(userInfo)
+
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Opboltejshshskidhdbd/Main/main/Sisyphus%20simulator", true))()
+
+    screenGui:Destroy()
+end
 
 function CorrectKeyNotifications()
-    OrionLib:MakeNotification({
-        Name = "Correct Key",
-        Content = "Welcome To The LEAN PARTY :D",
-        Image = "rbxassetid://4483345998",
-        Time = 5
-    })
+    local notification = Instance.new("ScreenGui")
+    notification.Name = "CorrectKeyNotification"
+    
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 200, 0, 50)
+    frame.Position = UDim2.new(0.5, -100, 0.8, -25)
+    frame.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    frame.BorderSizePixel = 0
+    frame.Parent = notification
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.Text = "Key is correct! Loading script..."
+    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Font = Enum.Font.SourceSans
+    textLabel.TextSize = 18
+    textLabel.Parent = frame
+
+    notification.Parent = playerGui
+    
+    wait(3)
+    
+    notification:Destroy()
 end
 
 function WrongKeyNotifications()
-    OrionLib:MakeNotification({
-        Name = " Wrong Key",
-        Content = "Your Not on The List Kid",
-        Image = "rbxassetid://4483345998",
-        Time = 5
-    })
+    local notification = Instance.new("ScreenGui")
+    notification.Name = "WrongKeyNotification"
+    
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 200, 0, 50)
+    frame.Position = UDim2.new(0.5, -100, 0.8, -25)
+    frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    frame.BorderSizePixel = 0
+    frame.Parent = notification
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.Text = "Wrong key! Please try again."
+    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Font = Enum.Font.SourceSans
+    textLabel.TextSize = 18
+    textLabel.Parent = frame
+
+    notification.Parent = playerGui
+    
+    wait(3)
+    
+    notification:Destroy()
 end
 
-local Tab = Window:MakeTab({
-	Name = "Key Room",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
-})
-Tab:AddLabel("Click GetKey button 🥰")
-Tab:AddTextbox({
-	Name = "Enter Key",
-	Default = "Enter Key",
-	TextDisappear = false,
-	Callback = function(Value)
-        _G.KeyInput = Value
-	end	  
-})
-Tab:AddButton({
-	Name = "Click To Get The Key",
-	Callback = function()
-setclipboard("https://link-hub.net/1057726/key")
-toclipboard("https://link-hub.net/1057726/key")
-      		print("button pressed")
-  	end    
-})
-Tab:AddButton({
-	Name = "Check Key!",
-	Callback = function()
-        if _G.KeyInput == _G.Key then
-         MakeScriptHub()
-         CorrectKeyNotifications()
-     else
-        WrongKeyNotifications()
+function CanUseKey()
+    local lastKeyTime = tonumber(player:GetAttribute(lastKeyTimeKey)) or 0
+    local currentTime = os.time()
+    return (currentTime - lastKeyTime) >= cooldownDuration
+end
+
+function SetLastKeyTime()
+    player:SetAttribute(lastKeyTimeKey, os.time())
+end
+
+local function CheckKeyCooldown()
+    local lastKeyTime = tonumber(player:GetAttribute(lastKeyTimeKey)) or 0
+    local currentTime = os.time()
+    return (currentTime - lastKeyTime) >= cooldownDuration
+end
+
+getKeyButton.MouseButton1Click:Connect(function()
+    local enteredKey = "u5kr4kfy6jg5k9go8f"
+    setclipboard(enteredKey)
+    toclipboard(enteredKey)
+    print("Button Pressed")
+end)
+
+checkKeyButton.MouseButton1Click:Connect(function()
+    if CheckKeyCooldown() then
+        local enteredKey = keyTextBox.Text
+        local correctKey = "u5kr4kfy6jg5k9go8f"
+
+        if enteredKey == correctKey then
+            MakeScriptHub()
+            CorrectKeyNotifications()
+            SetLastKeyTime()
+        else
+            WrongKeyNotifications()
         end
-  	end    
-})
+    else
+        warn("You need to get a new key from the website.")
+    end
+end)
