@@ -1,73 +1,6 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/Extras/Global"))()
 VG.DisableConnection(Error)
 VG.DisableConnection(Idled)
-local GetBlock = function()
-    local Block = nil
-    local Max = 50
-    if Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("Digsite", true) then
-        for i,v in next, Workspace.__THINGS.__INSTANCE_CONTAINER.Active.Digsite.Important.ActiveBlocks:GetChildren() do
-            if v:IsA("BasePart") then
-                local Mag = VG.Mag(Player.Character.HumanoidRootPart, v)
-                if Mag < Max then
-                    Max = Mag
-                    Block = v
-                end
-            end
-        end
-    end
-    return Block
-end
-local GetChest = function()
-    local Chest = nil
-    local Max = 50
-    if Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("Digsite", true) then
-        for i,v in next, Workspace.__THINGS.__INSTANCE_CONTAINER.Active.Digsite.Important.ActiveChests:GetChildren() do
-            if v:IsA("Model") then
-                local Mag = VG.Mag(Player.Character.HumanoidRootPart, v:GetModelCFrame())
-                if Mag < Max then
-                    Max = Mag
-                    Chest = v
-                end
-            end
-        end
-    end
-    return Chest
-end
-
-local GetBlock1 = function()
-    local Block = nil
-    local Max = 50
-    if Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite", true) then
-        for i,v in next, Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite.Important.ActiveBlocks:GetChildren() do
-            if v:IsA("BasePart") and v.BrickColor.Name ~= "Really black" then
-                local Mag = VG.Mag(Player.Character.HumanoidRootPart, v)
-                if Mag < Max then
-                    Max = Mag
-                    Block = v
-                end
-            end
-        end
-    end
-    return Block
-end
-
-local GetChest1 = function()
-    local Chest = nil
-    local Max = 50
-    if Workspace.__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("AdvancedDigsite", true) then
-        for i,v in next, Workspace.__THINGS.__INSTANCE_CONTAINER.Active.AdvancedDigsite.Important.ActiveChests:GetChildren() do
-            if v:IsA("Model") then
-                local Mag = VG.Mag(Player.Character.HumanoidRootPart, v:GetModelCFrame())
-                if Mag < Max then
-                    Max = Mag
-                    Chest = v
-                end
-            end
-        end
-    end
-    return Chest
-end
-
 local GetCoinInZone = function()
     local Target = nil
     local MaxDistance = math.huge
@@ -98,16 +31,6 @@ local GetNearestCoin = function()
     return Target
 end
 
-local Zones = {}
-for i,v in next, game:GetService("ReplicatedStorage").__DIRECTORY.Zones:GetChildren() do
-    for i,v in next, v:GetChildren() do
-        if v:IsA("ModuleScript") then
-            local String = string.split(v.Name, "| ", "")[2]
-            table.insert(Zones, String)
-        end
-    end
-end
-
 local Eggs = {}
 for i,v in next, getgc(true) do
     if type(v) == "table" then
@@ -136,9 +59,6 @@ local Window = Fluent:CreateWindow({
 
 local Tabs = {
     AutoFarm = Window:AddTab({ Title = "AutoFarm", Icon = "" }),
-    Obbys = Window:AddTab({ Title = "Obbys", Icon = "" }),
-    AutoMinigame = Window:AddTab({ Title = "AutoMinigames", Icon = "" }),
-    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 
 }
 
@@ -163,39 +83,6 @@ do
         end)
     end)
 
-    local Toggle = Tabs.AutoFarm:AddToggle("PetCoin1", {Title = "Auto Break In Selected Zone", Default = false})
-    Toggle:OnChanged(function()
-        AutoFarm1 = Options.PetCoin1.Value
-        spawn(function()
-            while wait(1) and AutoFarm1 do
-                pcall(function()
-                    if GetCoinInZone() == nil then
-                        ReplicatedStorage:WaitForChild("Network"):WaitForChild("Teleports_RequestTeleport"):InvokeServer(PickedZone)
-                        wait(10)
-                        for i,v in next, Workspace.Map:GetChildren() do
-                            if v.Name:find(PickedZone) then
-                                VG.Teleport(v.INTERACT.BREAK_ZONES.BREAK_ZONE.Position)
-                            end
-                        end
-                    end
-                    VG.Teleport(GetCoinInZone():GetModelCFrame().Position + Vector3.new(0,6,0))
-                    ReplicatedStorage:WaitForChild("Network"):WaitForChild("Breakables_PlayerDealDamage"):FireServer(GetCoinInZone().Name)
-                end)
-            end
-        end)
-    end)
-    local Dropdown = Tabs.AutoFarm:AddDropdown("Ds", {
-        Title = "Zones",
-        Values = Zones,
-        Multi = false,
-        Default = 1,
-    })
-
-    Dropdown:SetValue("nil")
-
-    Dropdown:OnChanged(function(Value)
-        PickedZone = Value
-    end)
     local Toggle = Tabs.AutoFarm:AddToggle("AutoEgg", {Title = "Auto Egg", Default = false})
     Toggle:OnChanged(function()
         AutoEgg = Options.AutoEgg.Value
@@ -237,35 +124,6 @@ do
     Dropdown:OnChanged(function(Value)
         WantedEgg = Value
     end)
-    Tabs.Obbys:AddButton({Title = "Auto Grab All ShinyRelics",Description = "Grabs all relics",Callback = function()
-        for i,v in next, Workspace.__THINGS.ShinyRelics:GetChildren() do
-            if v:IsA("BasePart") and v.Transparency == 0 then
-                VG.Teleport(v.Position)
-                wait(.5)
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Relic_Found"):InvokeServer(i)
-            end
-        end
-    end})
-
-    Tabs.Obbys:AddButton({Title = "Auto SpawnObby",Description = "Automaticly does the Start Obby",Callback = function()
-        if Workspace.__THINGS.Instances.SpawnObby.Teleports.Billboard.BillboardGui:GetChildren()[1].Text == "Complete for Reward!" then
-            VG.Teleport(Workspace.__THINGS.Instances.SpawnObby.Teleports.Enter.Position)
-            wait(5)
-            VG.Teleport(Workspace.__THINGS.__INSTANCE_CONTAINER.Active.SpawnObby.StartLine:GetModelCFrame().Position)
-            wait(.5)
-            VG.Teleport(Workspace.__THINGS.__INSTANCE_CONTAINER.Active.SpawnObby.Goal:GetModelCFrame().Position)
-        end
-    end})
-Tabs.Obbys:AddButton({Title = "Auto JungleObby",Description = "Automaticly does the Jungle Obby",Callback = function()
-    if Workspace.__THINGS.Instances.JungleObby.Teleports.Billboard.BillboardGui.TextLabel.Text == "Complete for Reward!" then
-        VG.Teleport(Workspace.__THINGS.Instances.JungleObby.Teleports.Enter.Position + Vector3.new(0,5,0))
-        wait(5)
-        VG.Teleport(Workspace.__THINGS.__INSTANCE_CONTAINER.Active.JungleObby.Interactable.StartLine.Position)
-        wait(.5)
-    end
-end})
-
-end
 
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
@@ -286,4 +144,3 @@ Fluent:Notify({
 })
 
 SaveManager:LoadAutoloadConfig()
-end
