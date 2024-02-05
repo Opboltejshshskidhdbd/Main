@@ -1,102 +1,67 @@
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
-local webhookUrl = "https://discord.com/api/webhooks/1186664125317791764/7Q-Qvneswd9NOFRxFsBhTw2JtqfSosZDfXL84xHn_Y7SxNFSU6JF1WCWXnNPJ301wcFb"
-
+-- Create a ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "KeySystemGUI"
 screenGui.Parent = playerGui
 
+-- Create a Frame as the main container
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0, 300, 0, 200)
 mainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
-mainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+mainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)  -- Dark background color
 mainFrame.BorderSizePixel = 0
 mainFrame.Name = "MainFrame"
 mainFrame.Parent = screenGui
-mainFrame.Active = true
-mainFrame.Draggable = true
+mainFrame.Active = true  -- Added line to make the frame active
+mainFrame.Draggable = true  -- Added line to make the frame draggable
 
+-- Create a TextBox for the user to input the key
 local keyTextBox = Instance.new("TextBox")
 keyTextBox.Size = UDim2.new(0.8, 0, 0, 30)
 keyTextBox.Position = UDim2.new(0.1, 0, 0.15, 0)
 keyTextBox.PlaceholderText = "Enter Key"
 keyTextBox.Text = ""
 keyTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-keyTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+keyTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)  -- Darker background color
 keyTextBox.BorderSizePixel = 0
 keyTextBox.Font = Enum.Font.SourceSans
 keyTextBox.TextSize = 18
 keyTextBox.Parent = mainFrame
 
+-- Create a cool-styled TextButton for 'Get Key'
 local getKeyButton = Instance.new("TextButton")
 getKeyButton.Size = UDim2.new(0.8, 0, 0, 30)
 getKeyButton.Position = UDim2.new(0.1, 0, 0.3, 0)
 getKeyButton.Text = "Get Key"
 getKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-getKeyButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+getKeyButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)  -- Darker background color
 getKeyButton.BorderSizePixel = 0
 getKeyButton.Font = Enum.Font.SourceSans
 getKeyButton.TextSize = 18
 getKeyButton.Parent = mainFrame
 
+-- Create a cool-styled TextButton for 'Check Key'
 local checkKeyButton = Instance.new("TextButton")
 checkKeyButton.Size = UDim2.new(0.8, 0, 0, 30)
 checkKeyButton.Position = UDim2.new(0.1, 0, 0.45, 0)
 checkKeyButton.Text = "Check Key"
 checkKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-checkKeyButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+checkKeyButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)  -- Darker background color
 checkKeyButton.BorderSizePixel = 0
 checkKeyButton.Font = Enum.Font.SourceSans
 checkKeyButton.TextSize = 18
 checkKeyButton.Parent = mainFrame
 
-local lastKeyTimeKey = "LastKeyTime_" .. player.UserId
-local cooldownDuration = 24 * 60 * 60  -- 24 hours in seconds
-
-function SendToDiscord(userInfo)
-    local embed = {
-        title = "User Info",
-        fields = {
-            {name = "Username:", value = userInfo.Username, inline = true},
-            {name = "Account Creation Date:", value = userInfo.AccountCreationDate, inline = false},
-        },
-        color = math.random(0, 0xFFFFFF),
-    }
-
-    local postData = {
-        embeds = {embed},
-    }
-
-    local success, response = pcall(function()
-        return game:GetService("HttpService"):PostAsync(webhookUrl, game:GetService("HttpService"):JSONEncode(postData), Enum.HttpContentType.ApplicationJson)
-    end)
-
-    if success and response then
-        print("Notification sent to Discord.")
-    else
-        warn("Failed to send notification to Discord.")
-    end
-end
-
-function GetUserInfo()
-    local userInfo = {
-        Username = player.Name,
-        AccountCreationDate = player.AccountAge,
-    }
-
-    return userInfo
-end
-
+-- Function to execute the main script
 function MakeScriptHub()
-    local userInfo = GetUserInfo()
-    SendToDiscord(userInfo)
-
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Opboltejshshskidhdbd/Main/main/Sisyphus%20simulator", true))()
-
+    loadstring(game:HttpGet(("https://raw.githubusercontent.com/Opboltejshshskidhdbd/Main/main/Sisyphus%20simulator"), true))()
+    -- Destroy the GUI after script execution
     screenGui:Destroy()
 end
 
+-- Function to display a notification for correct key
 function CorrectKeyNotifications()
     local notification = Instance.new("ScreenGui")
     notification.Name = "CorrectKeyNotification"
@@ -104,7 +69,7 @@ function CorrectKeyNotifications()
     local frame = Instance.new("Frame")
     frame.Size = UDim2.new(0, 200, 0, 50)
     frame.Position = UDim2.new(0.5, -100, 0.8, -25)
-    frame.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    frame.BackgroundColor3 = Color3.fromRGB(0, 255, 0) -- Green color for correct key
     frame.BorderSizePixel = 0
     frame.Parent = notification
 
@@ -119,11 +84,12 @@ function CorrectKeyNotifications()
 
     notification.Parent = playerGui
     
-    wait(3)
+    wait(3) -- Display the notification for 3 seconds (adjust as needed)
     
     notification:Destroy()
 end
 
+-- Function to display a notification for wrong key
 function WrongKeyNotifications()
     local notification = Instance.new("ScreenGui")
     notification.Name = "WrongKeyNotification"
@@ -131,7 +97,7 @@ function WrongKeyNotifications()
     local frame = Instance.new("Frame")
     frame.Size = UDim2.new(0, 200, 0, 50)
     frame.Position = UDim2.new(0.5, -100, 0.8, -25)
-    frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red color for wrong key
     frame.BorderSizePixel = 0
     frame.Parent = notification
 
@@ -146,47 +112,27 @@ function WrongKeyNotifications()
 
     notification.Parent = playerGui
     
-    wait(3)
+    wait(3) -- Display the notification for 3 seconds (adjust as needed)
     
     notification:Destroy()
 end
 
-function CanUseKey()
-    local lastKeyTime = tonumber(player:GetAttribute(lastKeyTimeKey)) or 0
-    local currentTime = os.time()
-    return (currentTime - lastKeyTime) >= cooldownDuration
-end
-
-function SetLastKeyTime()
-    player:SetAttribute(lastKeyTimeKey, os.time())
-end
-
-local function CheckKeyCooldown()
-    local lastKeyTime = tonumber(player:GetAttribute(lastKeyTimeKey)) or 0
-    local currentTime = os.time()
-    return (currentTime - lastKeyTime) >= cooldownDuration
-end
-
+-- Connect button click events
 getKeyButton.MouseButton1Click:Connect(function()
-    local enteredKey = "u5kr4kfy6jg5k9go8f"
+    local enteredKey = "u5kr4kfy6jg5k9go8f"  -- Replace this with your actual key
     setclipboard(enteredKey)
     toclipboard(enteredKey)
     print("Button Pressed")
 end)
 
 checkKeyButton.MouseButton1Click:Connect(function()
-    if CheckKeyCooldown() then
-        local enteredKey = keyTextBox.Text
-        local correctKey = "u5kr4kfy6jg5k9go8f"
-
-        if enteredKey == correctKey then
-            MakeScriptHub()
-            CorrectKeyNotifications()
-            SetLastKeyTime()
-        else
-            WrongKeyNotifications()
-        end
+    local enteredKey = keyTextBox.Text
+    local correctKey = "u5kr4kfy6jg5k9go8f"  -- Replace this with your actual key
+    
+    if enteredKey == correctKey then
+        MakeScriptHub()
+        CorrectKeyNotifications()
     else
-        warn("You need to get a new key from the website.")
+        WrongKeyNotifications()
     end
 end)
