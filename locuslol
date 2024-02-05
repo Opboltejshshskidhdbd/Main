@@ -1,56 +1,48 @@
--- Load Rayfield
-local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
-
--- Load Key
-local loadedKey = loadstring(game:HttpGet("https://pastebin.com/raw/sYksyEy"))()
-
--- Print loaded key
+local loadedKey = loadstring(game:HttpGet('https://pastebin.com/raw/sYkBsyEy'))()
 print(loadedKey)
-
--- Function to read key from file
-function readKey()
-    if readfile("/locuskey/key.txt") == loadedKey then
-        -- Key is valid
-        return true
-    else
-        -- Key is not valid
-        return false
-    end
-end
-
--- Create Rayfield window
-local Window = Rayfield:CreateWindow({
-    Name = "Main",
-    LoadingTitle = "Main",
-    LoadingSubtitle = "by locus",
-    ConfigurationSaving = {
-        Enabled = false,
-        FolderName = nil, -- Create a custom folder for your hub/game
-        FileName = "Big Hub"
-    },
-    Discord = {
-        Enabled = false,
-        Invite = "ABCD", -- The Discord invite code, do not include discord.gg/
-        RememberJoins = true, -- Set this to false to make them join the discord every time they load it up
-        KeySystem = false, -- Set this to true to use our key system
+getgenv().inputKey = function()
+    local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+    local WindowRayfield = Rayfield:CreateWindow({
+        Name = "Main",
+        LoadingTitle = "Main",
+        LoadingSubtitle = "by locus",
+        ConfigurationSaving = {
+            Enabled = false,
+            FolderName = nil,
+            FileName = "Big Hub"
+        },
+        Discord = {
+            Enabled = false,
+            Invite = "ABCD", -- Replace "ABCD" with your Discord invite code, do not include discord.gg/
+            RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+        },
+        KeySystem = false, -- Set this to true to use the key system
         KeySettings = {
             Title = "Sirius Hub",
             Subtitle = "Key System",
             Note = "Join the discord (discord.gg/sirius)",
-            Siriuskey = {
-                SaveKey = true,
-                Grabkeyfronsite = false, -- If this is true, set key below to the RAW site you would like Rayfield to get the key from
-                Key = "Hello"
-            }
+            FileName = "Siriuskey",
+            SaveKey = true,
+            CreateCustomFolder = false,
+            GrabKeyFromSite = false,
+            Key = "Hello" -- Set the default key here
         }
-    }
-})
+    })
 
--- Check if the key file and folder exist, if not, create them
-if not isfolder("/locuskey") then
-    makefolder("/locuskey")
-end
+    Rayfield:Notify({
+        Title = "Found key in local storage.",
+        Content = "We have found the correct key in the files of your PC.",
+        Duration = 3.0,
+        Image = 4483362458
+    })
 
-if not isfile("/locuskey/key.txt") then
-    makefile("/locuskey/key.txt")
+    function readKey()
+        if readfile("/locuskey/key.txt") == loadedKey then
+            LoadMain()
+        else
+            -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+        end
+    end
+
+    readKey() -- Call readKey function
 end
