@@ -119,7 +119,7 @@ end
 
 -- Connect button click events
 getKeyButton.MouseButton1Click:Connect(function()
-    local enteredKey = "u5kr4kfy6jg5k9go8f"  -- Replace this with your actual key
+    local enteredKey = "https://workink.net/1TI8/lsbzdf2w"  -- Replace this with your actual key
     setclipboard(enteredKey)
     toclipboard(enteredKey)
     print("Button Pressed")
