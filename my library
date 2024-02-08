@@ -1,0 +1,112 @@
+local GUIBuilder = {}
+
+-- Function to create a new ScreenGui
+function GUIBuilder.newScreenGui()
+    local gui = Instance.new("ScreenGui")
+    return gui
+end
+
+-- Function to create a new Frame
+function GUIBuilder.newFrame(parent)
+    local frame = Instance.new("Frame")
+    frame.Parent = parent
+    return frame
+end
+
+-- Function to create a new TextButton
+function GUIBuilder.newTextButton(parent, text, callback)
+    local button = Instance.new("TextButton")
+    button.Parent = parent
+    button.Text = text
+    button.MouseButton1Click:Connect(callback)
+    return button
+end
+
+-- Function to create a new TextLabel
+function GUIBuilder.newTextLabel(parent, text)
+    local label = Instance.new("TextLabel")
+    label.Parent = parent
+    label.Text = text
+    return label
+end
+
+-- Function to add a dropdown
+function GUIBuilder.addDropdown(tab, options)
+    local dropdownButton = GUIBuilder.newTextButton(tab.Frame, options.Name, function()
+        dropdownFrame.Visible = not dropdownFrame.Visible
+    end)
+
+    local dropdownFrame = GUIBuilder.newFrame(tab.Frame)
+    dropdownFrame.Size = UDim2.new(0, 100, 0, 120)
+    dropdownFrame.Position = UDim2.new(0, 10, 0, 40)
+    dropdownFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    dropdownFrame.BorderSizePixel = 0
+    dropdownFrame.Visible = false
+
+    local defaultOption = options.Default or options.Options[1]
+    local dropdownButton = GUIBuilder.newTextButton(dropdownFrame, defaultOption, function()
+        dropdownFrame.Visible = not dropdownFrame.Visible
+    end)
+
+    local dropdownOptions = options.Options
+    for i, optionText in ipairs(dropdownOptions) do
+        local optionButton = GUIBuilder.newTextButton(dropdownFrame, optionText, function()
+            dropdownButton.Text = optionText
+            dropdownFrame.Visible = false
+            if options.Callback then
+                options.Callback(optionText)
+            end
+        end)
+        optionButton.Position = UDim2.new(0, 0, 0, (i - 1) * 30)
+    end
+end
+
+-- Function to add a toggle
+function GUIBuilder.addToggle(tab, options)
+    local toggleButton = GUIBuilder.newTextButton(tab.Frame, options.Name, function()
+        options.Callback(not toggleButton.Enabled)
+        toggleButton.Enabled = not toggleButton.Enabled
+    end)
+    toggleButton.Enabled = options.Default
+end
+
+-- Function to add a button
+function GUIBuilder.addButton(tab, options)
+    local button = GUIBuilder.newTextButton(tab.Frame, options.Name, options.Callback)
+    button.BackgroundColor3 = options.BackgroundColor or Color3.fromRGB(255, 255, 255)
+    button.BorderSizePixel = options.BorderSizePixel or 1
+    button.TextColor3 = options.TextColor or Color3.fromRGB(0, 0, 0)
+end
+
+-- Function to add a tab
+function GUIBuilder.addTab(window, options)
+    local tab = {
+        Name = options.Name,
+        Frame = GUIBuilder.newFrame(window.GUI),
+        AddDropdown = function(self, dropdownOptions)
+            GUIBuilder.addDropdown(self, dropdownOptions)
+        end,
+        AddToggle = function(self, toggleOptions)
+            GUIBuilder.addToggle(self, toggleOptions)
+        end,
+        AddButton = function(self, buttonOptions)
+            GUIBuilder.addButton(self, buttonOptions)
+        end
+    }
+    tab.Frame.Visible = false
+    return tab
+end
+
+-- Function to create a window
+function GUIBuilder.newWindow(options)
+    local window = {
+        Name = options.Name,
+        GUI = GUIBuilder.newScreenGui(),
+        AddTab = function(self, tabOptions)
+            return GUIBuilder.addTab(self, tabOptions)
+        end
+    }
+    return window
+end
+
+return GUIBuilder
