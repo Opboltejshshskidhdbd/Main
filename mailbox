@@ -1,0 +1,9 @@
+local args = {
+    [1] = "@TWOPARTYGAMER2",
+    [2] = "hii",
+    [3] = "Pet",
+    [4] = "3d9776b2a5904cbc988ddf7aec975fac",
+    [5] = 1
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Send"):InvokeServer(unpack(args))
