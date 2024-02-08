@@ -1,5 +1,3 @@
--- Updated GUI Builder script with draggable window functionality
-
 local GUIBuilder = {}
 
 -- Function to create a new ScreenGui
@@ -109,28 +107,31 @@ function GUIBuilder.newWindow(options)
         end
     }
 
-    -- Make the window draggable
+    -- Dragging functionality
+    local dragInput
     local dragStart
     local startPos
-    local dragging
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        window.GUI.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
 
     window.GUI.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             dragStart = input.Position
             startPos = window.GUI.Position
-            dragging = true
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
+                    dragInput = nil
                 end
             end)
         end
     end)
 
     window.GUI.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
-            local delta = input.Position - dragStart
-            window.GUI.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
         end
     end)
 
