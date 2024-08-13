@@ -1,148 +1,97 @@
--- UI Library for Galaxy-Themed Exploit UI
-local GalaxyUI = {}
+-- UI Library Module
+local UiLibrary = {}
 
--- Function to create a window
-function GalaxyUI:createWindow(windowName)
-    print("Creating Window:", windowName) -- Debug Output
-    local ScreenGui = Instance.new("ScreenGui")
-    local WindowFrame = Instance.new("Frame")
-    local Title = Instance.new("TextLabel")
-
-    ScreenGui.Name = windowName
-    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+function UiLibrary:CreateWindow(windowName)
+    local window = {}
+    window.Name = windowName
+    window.Tabs = {}
     
-    -- Main Window Frame
-    WindowFrame.Name = "WindowFrame"
-    WindowFrame.Parent = ScreenGui
-    WindowFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 50)
-    WindowFrame.Size = UDim2.new(0, 400, 0, 300)
-    WindowFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
-    WindowFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    function window:CreateTab(tabName, tabIcon)
+        local tab = {}
+        tab.Name = tabName
+        tab.Icon = tabIcon
+        tab.Elements = {}
+        
+        -- Create a frame to hold all elements in this tab
+        local tabFrame = Instance.new("Frame")
+        tabFrame.Name = tabName .. "Frame"
+        tabFrame.Size = UDim2.new(1, 0, 1, -50)
+        tabFrame.Position = UDim2.new(0, 0, 0, 50)
+        tabFrame.Visible = false  -- Initially hidden
+        tabFrame.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild(window.Name)
+
+        function tab:CreateButton(buttonName, callback)
+            local button = Instance.new("TextButton")
+            button.Name = buttonName
+            button.Text = buttonName
+            button.Size = UDim2.new(0, 200, 0, 50)
+            button.Parent = tabFrame  -- Parent button to the tab's frame
+            
+            button.MouseButton1Click:Connect(function()
+                callback()
+            end)
+            
+            table.insert(self.Elements, button)
+        end
+        
+        function tab:CreateToggle(toggleName, callback)
+            local toggleEnabled = false
+            local toggle = Instance.new("TextButton")
+            toggle.Name = toggleName
+            toggle.Text = toggleName
+            toggle.Size = UDim2.new(0, 80, 0, 40)
+            toggle.Parent = tabFrame  -- Parent toggle to the tab's frame
+            
+            toggle.MouseButton1Click:Connect(function()
+                toggleEnabled = not toggleEnabled
+                callback(toggleEnabled)
+            end)
+            
+            table.insert(self.Elements, toggle)
+        end
+        
+        table.insert(window.Tabs, tab)
+        return tab
+    end
     
-    -- Title of the Window
-    Title.Name = "Title"
-    Title.Parent = WindowFrame
-    Title.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    Title.Size = UDim2.new(1, 0, 0, 50)
-    Title.Font = Enum.Font.SourceSansBold
-    Title.Text = windowName
-    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Title.TextSize = 24
-    
-    return WindowFrame
-end
+    function window:Display()
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.Name = self.Name
+        screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+        
+        local topBar = Instance.new("Frame")
+        topBar.Name = "TopBar"
+        topBar.Size = UDim2.new(1, 0, 0, 50)
+        topBar.Position = UDim2.new(0, 0, 0, 0)
+        topBar.BackgroundColor3 = Color3.fromRGB(25, 25, 50)
+        topBar.Parent = screenGui
 
--- Function to create a tab
-function GalaxyUI:CreateTab(window, tabName)
-    print("Creating Tab:", tabName) -- Debug Output
-    local TabButton = Instance.new("TextButton")
-    
-    TabButton.Name = tabName
-    TabButton.Parent = window
-    TabButton.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
-    TabButton.Size = UDim2.new(0, 100, 0, 40)
-    TabButton.Position = UDim2.new(0, 0, 0, 50)
-    TabButton.Text = tabName
-    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TabButton.Font = Enum.Font.SourceSans
-    TabButton.TextSize = 18
-    
-    return TabButton
-end
-
--- Function to create a button
-function GalaxyUI:CreateButton(tab, buttonText, callback)
-    print("Creating Button:", buttonText) -- Debug Output
-    local Button = Instance.new("TextButton")
-    local UIGradient = Instance.new("UIGradient")
-    local UICorner = Instance.new("UICorner")
-
-    Button.Parent = tab
-    Button.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
-    Button.Size = UDim2.new(0, 200, 0, 50)
-    Button.Position = UDim2.new(0, 10, 0, 100)
-    Button.Text = ""
-    
-    local ButtonText = Instance.new("TextLabel")
-    ButtonText.Parent = Button
-    ButtonText.Size = UDim2.new(1, 0, 1, 0)
-    ButtonText.BackgroundTransparency = 1
-    ButtonText.Text = buttonText
-    ButtonText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ButtonText.Font = Enum.Font.SourceSansBold
-    ButtonText.TextSize = 18
-    
-    UIGradient.Parent = Button
-    UIGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 30)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(50, 0, 100)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 0, 150))
-    }
-    
-    UICorner.CornerRadius = UDim.new(0, 25)
-    UICorner.Parent = Button
-    
-    Button.MouseButton1Click:Connect(callback)
-end
-
--- Function to create a toggle
-function GalaxyUI:CreateToggle(tab, toggleText, callback)
-    print("Creating Toggle:", toggleText) -- Debug Output
-    local ToggleButton = Instance.new("TextButton")
-    local ToggleKnob = Instance.new("Frame")
-    local UIGradient = Instance.new("UIGradient")
-    local UICorner = Instance.new("UICorner")
-
-    ToggleButton.Parent = tab
-    ToggleButton.Size = UDim2.new(0, 80, 0, 40)
-    ToggleButton.Position = UDim2.new(0, 10, 0, 160)
-    ToggleButton.BackgroundColor3 = Color3.new(0, 0, 0)
-    ToggleButton.Text = ""
-
-    ToggleKnob.Parent = ToggleButton
-    ToggleKnob.Size = UDim2.new(0, 36, 1, -4)
-    ToggleKnob.Position = UDim2.new(0, 2, 0, 2)
-    ToggleKnob.BackgroundColor3 = Color3.new(1, 1, 1)
-    ToggleKnob.BorderSizePixel = 0
-
-    UIGradient.Parent = ToggleButton
-    UIGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 50)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(50, 0, 100)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 0, 150))
-    }
-
-    UICorner.CornerRadius = UDim.new(0, 20)
-    UICorner.Parent = ToggleButton
-
-    local KnobCorner = UICorner:Clone()
-    KnobCorner.Parent = ToggleKnob
-
-    local toggleEnabled = false
-
-    local function toggleAnimation(isEnabled)
-        if isEnabled then
-            ToggleKnob:TweenPosition(UDim2.new(1, -38, 0, 2), "Out", "Quad", 0.3, true)
-            UIGradient.Color = ColorSequence.new{
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 50, 0)),
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 100, 50)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 150, 100))
-            }
-            ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
-        else
-            ToggleKnob:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.3, true)
-            UIGradient.Color = ColorSequence.new{
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(50, 0, 0)),
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(100, 50, 0)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 100, 0))
-            }
-            ToggleButton.BackgroundColor3 = Color3.new(0, 0, 0)
+        for i, tab in ipairs(self.Tabs) do
+            local tabButton = Instance.new("TextButton")
+            tabButton.Name = tab.Name
+            tabButton.Text = tab.Name
+            tabButton.Size = UDim2.new(0, 100, 0, 50)
+            tabButton.Position = UDim2.new(0, (i-1)*100, 0, 0)  -- Positioning each tab button next to each other
+            tabButton.Parent = topBar
+            
+            tabButton.MouseButton1Click:Connect(function()
+                for _, otherTab in ipairs(window.Tabs) do
+                    local otherTabFrame = game.Players.LocalPlayer.PlayerGui[window.Name]:FindFirstChild(otherTab.Name .. "Frame")
+                    otherTabFrame.Visible = false  -- Hide all tab frames
+                end
+                local currentTabFrame = game.Players.LocalPlayer.PlayerGui[window.Name]:FindFirstChild(tab.Name .. "Frame")
+                currentTabFrame.Visible = true  -- Show current tab frame
+            end)
+        end
+        
+        -- Initially display the first tab's content
+        if #self.Tabs > 0 then
+            local firstTabFrame = game.Players.LocalPlayer.PlayerGui[window.Name]:FindFirstChild(self.Tabs[1].Name .. "Frame")
+            firstTabFrame.Visible = true
         end
     end
-
-    ToggleButton.MouseButton1Click:Connect(function()
-        toggleEnabled = not toggleEnabled
-        toggleAnimation(toggleEnabled)
-        callback(toggleEnabled)
-    end)
+    
+    return window
 end
+
+return UiLibrary
