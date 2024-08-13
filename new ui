@@ -1,136 +1,91 @@
--- GalaxyUI Library
-
+-- UI Library for Galaxy-Themed Exploit UI
 local GalaxyUI = {}
 
--- Function to create a new window
+-- Function to create a window
 function GalaxyUI:createWindow(windowName)
     local ScreenGui = Instance.new("ScreenGui")
+    local WindowFrame = Instance.new("Frame")
+    local Title = Instance.new("TextLabel")
+
     ScreenGui.Name = windowName
     ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     
-    return ScreenGui
+    -- Main Window Frame
+    WindowFrame.Name = "WindowFrame"
+    WindowFrame.Parent = ScreenGui
+    WindowFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 50)
+    WindowFrame.Size = UDim2.new(0, 400, 0, 300)
+    WindowFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+    WindowFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    
+    -- Title of the Window
+    Title.Name = "Title"
+    Title.Parent = WindowFrame
+    Title.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Title.Size = UDim2.new(1, 0, 0, 50)
+    Title.Font = Enum.Font.SourceSansBold
+    Title.Text = windowName
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize = 24
+    
+    return WindowFrame
 end
 
--- Function to create a new tab
-function GalaxyUI:CreateTab(window, tabName, icon)
-    local Tab = Instance.new("Frame")
-    Tab.Name = tabName
-    Tab.Parent = window
-    Tab.Size = UDim2.new(1, 0, 1, 0)
-    Tab.BackgroundTransparency = 1
+-- Function to create a tab
+function GalaxyUI:CreateTab(window, tabName)
+    local TabButton = Instance.new("TextButton")
     
-    -- Optional: Add an icon or title for the tab
+    TabButton.Name = tabName
+    TabButton.Parent = window
+    TabButton.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
+    TabButton.Size = UDim2.new(0, 100, 0, 40)
+    TabButton.Position = UDim2.new(0, 0, 0, 50)
+    TabButton.Text = tabName
+    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TabButton.Font = Enum.Font.SourceSans
+    TabButton.TextSize = 18
     
-    return Tab
+    -- Optional: Logic to switch between tabs can be implemented here
+    
+    return TabButton
 end
 
--- Function to create a new button
-function GalaxyUI:CreateButton(tab, buttonName, callback)
-    local GalaxyButton = Instance.new("TextButton")
-    local ButtonText = Instance.new("TextLabel")
+-- Function to create a button
+function GalaxyUI:CreateButton(tab, buttonText, callback)
+    local Button = Instance.new("TextButton")
     local UIGradient = Instance.new("UIGradient")
     local UICorner = Instance.new("UICorner")
-    local UIPadding = Instance.new("UIPadding")
 
-    GalaxyButton.Parent = tab
-    GalaxyButton.Size = UDim2.new(0, 200, 0, 50)
-    GalaxyButton.Position = UDim2.new(0, 100, 0, 200)
-    GalaxyButton.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
-    GalaxyButton.BorderSizePixel = 0
-    GalaxyButton.Text = ""
-    GalaxyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    GalaxyButton.TextScaled = true
-    GalaxyButton.TextStrokeTransparency = 1  -- Hide default stroke
-    GalaxyButton.TextWrapped = true
-
-    -- Button Text
-    ButtonText.Parent = GalaxyButton
+    Button.Parent = tab
+    Button.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
+    Button.Size = UDim2.new(0, 200, 0, 50)
+    Button.Position = UDim2.new(0, 10, 0, 100)
+    Button.Text = ""
+    
+    local ButtonText = Instance.new("TextLabel")
+    ButtonText.Parent = Button
     ButtonText.Size = UDim2.new(1, 0, 1, 0)
-    ButtonText.Position = UDim2.new(0, 0, 0, 0)
     ButtonText.BackgroundTransparency = 1
-    ButtonText.Text = buttonName
+    ButtonText.Text = buttonText
     ButtonText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ButtonText.TextStrokeTransparency = 0.5
-    ButtonText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-    ButtonText.TextScaled = true
-    ButtonText.TextWrapped = true
-
-    -- Gradient Background for the Button
-    UIGradient.Parent = GalaxyButton
+    ButtonText.Font = Enum.Font.SourceSansBold
+    ButtonText.TextSize = 18
+    
+    UIGradient.Parent = Button
     UIGradient.Color = ColorSequence.new{
         ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 30)),
         ColorSequenceKeypoint.new(0.5, Color3.fromRGB(50, 0, 100)),
         ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 0, 150))
     }
-    UIGradient.Rotation = 45
-
-    -- Gradient for the Text
-    local TextGradient = Instance.new("UIGradient")
-    TextGradient.Parent = ButtonText
-    TextGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),  -- White
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 150, 255)),  -- Light Blue
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 255))     -- Magenta
-    }
-    TextGradient.Rotation = 45
-
-    -- Corner Rounding
+    
     UICorner.CornerRadius = UDim.new(0, 25)
-    UICorner.Parent = GalaxyButton
-
-    -- Padding
-    UIPadding.Parent = GalaxyButton
-    UIPadding.PaddingLeft = UDim.new(0, 10)
-    UIPadding.PaddingRight = UDim.new(0, 10)
-    UIPadding.PaddingTop = UDim.new(0, 5)
-    UIPadding.PaddingBottom = UDim.new(0, 5)
-
-    -- Animation Function
-    local function buttonAnimation()
-        local tweenService = game:GetService("TweenService")
-
-        -- Tween info for hover effect
-        local hoverTweenInfo = TweenInfo.new(
-            0.3, -- Time
-            Enum.EasingStyle.Quad, -- EasingStyle
-            Enum.EasingDirection.Out -- EasingDirection
-        )
-
-        local hoverGoal = {BackgroundColor3 = Color3.fromRGB(255, 100, 200)}
-
-        -- Tween info for non-hover effect
-        local normalTweenInfo = TweenInfo.new(
-            0.3, -- Time
-            Enum.EasingStyle.Quad, -- EasingStyle
-            Enum.EasingDirection.Out -- EasingDirection
-        )
-
-        local normalGoal = {BackgroundColor3 = Color3.fromRGB(20, 20, 40)}
-
-        local hoverTween = tweenService:Create(GalaxyButton, hoverTweenInfo, hoverGoal)
-        local normalTween = tweenService:Create(GalaxyButton, normalTweenInfo, normalGoal)
-
-        GalaxyButton.MouseEnter:Connect(function()
-            hoverTween:Play()
-        end)
-
-        GalaxyButton.MouseLeave:Connect(function()
-            normalTween:Play()
-        end)
-    end
-
-    -- Initialize button animation
-    buttonAnimation()
-
-    GalaxyButton.MouseButton1Click:Connect(function()
-        callback()
-    end)
-
-    return GalaxyButton
+    UICorner.Parent = Button
+    
+    Button.MouseButton1Click:Connect(callback)
 end
 
--- Function to create a new toggle
-function GalaxyUI:CreateToggle(tab, toggleName, callback)
+-- Function to create a toggle
+function GalaxyUI:CreateToggle(tab, toggleText, callback)
     local ToggleButton = Instance.new("TextButton")
     local ToggleKnob = Instance.new("Frame")
     local UIGradient = Instance.new("UIGradient")
@@ -138,19 +93,16 @@ function GalaxyUI:CreateToggle(tab, toggleName, callback)
 
     ToggleButton.Parent = tab
     ToggleButton.Size = UDim2.new(0, 80, 0, 40)
-    ToggleButton.Position = UDim2.new(0, 100, 0, 100)
+    ToggleButton.Position = UDim2.new(0, 10, 0, 160)
     ToggleButton.BackgroundColor3 = Color3.new(0, 0, 0)
-    ToggleButton.BorderSizePixel = 0
     ToggleButton.Text = ""
 
-    -- Knob
     ToggleKnob.Parent = ToggleButton
     ToggleKnob.Size = UDim2.new(0, 36, 1, -4)
     ToggleKnob.Position = UDim2.new(0, 2, 0, 2)
     ToggleKnob.BackgroundColor3 = Color3.new(1, 1, 1)
     ToggleKnob.BorderSizePixel = 0
 
-    -- Gradient Background for the Button
     UIGradient.Parent = ToggleButton
     UIGradient.Color = ColorSequence.new{
         ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 50)),
@@ -158,23 +110,17 @@ function GalaxyUI:CreateToggle(tab, toggleName, callback)
         ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 0, 150))
     }
 
-    -- Corner Rounding
     UICorner.CornerRadius = UDim.new(0, 20)
     UICorner.Parent = ToggleButton
 
-    -- Corner Rounding for the Knob
     local KnobCorner = UICorner:Clone()
     KnobCorner.Parent = ToggleKnob
 
-    -- Initial toggle state
     local toggleEnabled = false
 
     local function toggleAnimation(isEnabled)
         if isEnabled then
-            ToggleKnob:TweenPosition(
-                UDim2.new(1, -38, 0, 2),
-                "Out", "Quad", 0.3, true
-            )
+            ToggleKnob:TweenPosition(UDim2.new(1, -38, 0, 2), "Out", "Quad", 0.3, true)
             UIGradient.Color = ColorSequence.new{
                 ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 50, 0)),
                 ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 100, 50)),
@@ -182,10 +128,7 @@ function GalaxyUI:CreateToggle(tab, toggleName, callback)
             }
             ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
         else
-            ToggleKnob:TweenPosition(
-                UDim2.new(0, 2, 0, 2),
-                "Out", "Quad", 0.3, true
-            )
+            ToggleKnob:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.3, true)
             UIGradient.Color = ColorSequence.new{
                 ColorSequenceKeypoint.new(0, Color3.fromRGB(50, 0, 0)),
                 ColorSequenceKeypoint.new(0.5, Color3.fromRGB(100, 50, 0)),
@@ -200,8 +143,4 @@ function GalaxyUI:CreateToggle(tab, toggleName, callback)
         toggleAnimation(toggleEnabled)
         callback(toggleEnabled)
     end)
-
-    return ToggleButton
 end
-
-return GalaxyUI
