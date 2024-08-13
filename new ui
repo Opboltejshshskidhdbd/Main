@@ -3,6 +3,7 @@ local GalaxyUI = {}
 
 -- Function to create a window
 function GalaxyUI:createWindow(windowName)
+    print("Creating Window:", windowName) -- Debug Output
     local ScreenGui = Instance.new("ScreenGui")
     local WindowFrame = Instance.new("Frame")
     local Title = Instance.new("TextLabel")
@@ -33,6 +34,7 @@ end
 
 -- Function to create a tab
 function GalaxyUI:CreateTab(window, tabName)
+    print("Creating Tab:", tabName) -- Debug Output
     local TabButton = Instance.new("TextButton")
     
     TabButton.Name = tabName
@@ -50,6 +52,7 @@ end
 
 -- Function to create a button
 function GalaxyUI:CreateButton(tab, buttonText, callback)
+    print("Creating Button:", buttonText) -- Debug Output
     local Button = Instance.new("TextButton")
     local UIGradient = Instance.new("UIGradient")
     local UICorner = Instance.new("UICorner")
@@ -84,6 +87,7 @@ end
 
 -- Function to create a toggle
 function GalaxyUI:CreateToggle(tab, toggleText, callback)
+    print("Creating Toggle:", toggleText) -- Debug Output
     local ToggleButton = Instance.new("TextButton")
     local ToggleKnob = Instance.new("Frame")
     local UIGradient = Instance.new("UIGradient")
