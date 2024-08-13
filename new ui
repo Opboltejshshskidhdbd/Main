@@ -45,8 +45,6 @@ function GalaxyUI:CreateTab(window, tabName)
     TabButton.Font = Enum.Font.SourceSans
     TabButton.TextSize = 18
     
-    -- Optional: Logic to switch between tabs can be implemented here
-    
     return TabButton
 end
 
