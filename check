@@ -1,0 +1,74 @@
+--Turning Main.lua file ui into ui library for roblox exploit 
+
+local Library ={}
+function Library:CreateWindow(name)
+    local Window = Instance.new("ScreenGui")
+    Window.Name = name
+    Window.Parent = game.CoreGui
+    return Window
+end
+
+function Library:CreateFrame(name)
+    local Frame = Instance.new("Frame")
+    Frame.Name = name
+    Frame.Parent = Window
+    Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    Frame.BackgroundTransparency = 0.7
+    Frame.BorderSizePixel = 0
+    Frame.Position = UDim2.new(0.5, -Frame.Size.X.Offset/2, 0.5, -Frame.Size.Y.Offset/2)
+    Frame.Size = UDim2.new(0, Frame.Size.X.Offset, 0, Frame.Size.Y.Offset)
+    Frame.ClipsDescendants = true
+    return Frame
+end
+function Library:CreateLabel(name, text)
+    local Label = Instance.new("TextLabel")
+    Label.Name = name
+    Label.Parent = Frame
+    Label.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    Label.BackgroundTransparency = 0.7
+    Label.BorderSizePixel = 0
+    Label.Position = UDim2.new(0, 0, 0, 0)
+    Label.Size = UDim2.new(1, 0, 0, 0)
+    Label.Font = Enum.Font.GothamBold
+    Label.Text = text
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.TextScaled = true
+    Label.TextWrapped = true
+    return Label
+end
+function Library:CreateButton(name, text, callback)
+    local Button = Instance.new("TextButton")
+    Button.Name = name
+    Button.Parent = Frame
+    Button.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    Button.BackgroundTransparency = 0.7
+    Button.BorderSizePixel = 0
+    Button.Position = UDim2.new(0, 0, 0, 0)
+    Button.Size = UDim2.new(1, 0, 0, 0)
+    Button.Font = Enum.Font.GothamBold
+    Button.Text = text
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.TextScaled = true
+    Button.TextWrapped = true
+    Button.MouseButton1Click:Connect(callback)
+    return Button
+end
+function Library:CreateToggle(name, text, callback)
+    local Toggle = Instance.new("TextButton")
+    Toggle.Name = name
+    Toggle.Parent = Frame
+    Toggle.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    Toggle.BackgroundTransparency = 0.7
+    Toggle.BorderSizePixel = 0
+    Toggle.Position = UDim2.new(0, 0, 0, 0)
+    Toggle.Size = UDim2.new(1, 0, 0, 0)
+    Toggle.Font = Enum.Font.GothamBold
+    Toggle.Text = text
+    Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Toggle.TextScaled = true
+    Toggle.TextWrapped = true
+    Toggle.MouseButton1Click:Connect(callback)
+    return Toggle
+end
+
+return Library
