@@ -1,4 +1,3 @@
--- UI Library Module
 local UiLibrary = {}
 
 function UiLibrary:CreateWindow(windowName)
@@ -12,20 +11,14 @@ function UiLibrary:CreateWindow(windowName)
         tab.Icon = tabIcon
         tab.Elements = {}
         
-        -- Create a frame to hold all elements in this tab
-        local tabFrame = Instance.new("Frame")
-        tabFrame.Name = tabName .. "Frame"
-        tabFrame.Size = UDim2.new(1, 0, 1, -50)
-        tabFrame.Position = UDim2.new(0, 0, 0, 50)
-        tabFrame.Visible = false  -- Initially hidden
-        tabFrame.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild(window.Name)
-
         function tab:CreateButton(buttonName, callback)
             local button = Instance.new("TextButton")
             button.Name = buttonName
             button.Text = buttonName
             button.Size = UDim2.new(0, 200, 0, 50)
-            button.Parent = tabFrame  -- Parent button to the tab's frame
+            
+            -- Parent button to the ScreenGui (Window) after it's created
+            button.Parent = game.Players.LocalPlayer.PlayerGui:WaitForChild(window.Name)
             
             button.MouseButton1Click:Connect(function()
                 callback()
@@ -40,7 +33,9 @@ function UiLibrary:CreateWindow(windowName)
             toggle.Name = toggleName
             toggle.Text = toggleName
             toggle.Size = UDim2.new(0, 80, 0, 40)
-            toggle.Parent = tabFrame  -- Parent toggle to the tab's frame
+            
+            -- Parent toggle to the ScreenGui (Window) after it's created
+            toggle.Parent = game.Players.LocalPlayer.PlayerGui:WaitForChild(window.Name)
             
             toggle.MouseButton1Click:Connect(function()
                 toggleEnabled = not toggleEnabled
@@ -50,7 +45,7 @@ function UiLibrary:CreateWindow(windowName)
             table.insert(self.Elements, toggle)
         end
         
-        table.insert(window.Tabs, tab)
+        table.insert(self.Tabs, tab)
         return tab
     end
     
@@ -59,35 +54,19 @@ function UiLibrary:CreateWindow(windowName)
         screenGui.Name = self.Name
         screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
         
-        local topBar = Instance.new("Frame")
-        topBar.Name = "TopBar"
-        topBar.Size = UDim2.new(1, 0, 0, 50)
-        topBar.Position = UDim2.new(0, 0, 0, 0)
-        topBar.BackgroundColor3 = Color3.fromRGB(25, 25, 50)
-        topBar.Parent = screenGui
-
-        for i, tab in ipairs(self.Tabs) do
+        -- Create buttons for each tab in the ScreenGui
+        for _, tab in ipairs(self.Tabs) do
             local tabButton = Instance.new("TextButton")
             tabButton.Name = tab.Name
             tabButton.Text = tab.Name
             tabButton.Size = UDim2.new(0, 100, 0, 50)
-            tabButton.Position = UDim2.new(0, (i-1)*100, 0, 0)  -- Positioning each tab button next to each other
-            tabButton.Parent = topBar
+            tabButton.Parent = screenGui
             
             tabButton.MouseButton1Click:Connect(function()
-                for _, otherTab in ipairs(window.Tabs) do
-                    local otherTabFrame = game.Players.LocalPlayer.PlayerGui[window.Name]:FindFirstChild(otherTab.Name .. "Frame")
-                    otherTabFrame.Visible = false  -- Hide all tab frames
+                for _, element in ipairs(tab.Elements) do
+                    element.Visible = not element.Visible
                 end
-                local currentTabFrame = game.Players.LocalPlayer.PlayerGui[window.Name]:FindFirstChild(tab.Name .. "Frame")
-                currentTabFrame.Visible = true  -- Show current tab frame
             end)
-        end
-        
-        -- Initially display the first tab's content
-        if #self.Tabs > 0 then
-            local firstTabFrame = game.Players.LocalPlayer.PlayerGui[window.Name]:FindFirstChild(self.Tabs[1].Name .. "Frame")
-            firstTabFrame.Visible = true
         end
     end
     
