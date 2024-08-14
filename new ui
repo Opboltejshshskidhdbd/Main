@@ -1,76 +1,179 @@
-local UiLibrary = {}
+--Turning Main.lua file ui into ui library for roblox exploit 
 
-function UiLibrary:CreateWindow(windowName)
-    local window = {}
-    window.Name = windowName
-    window.Tabs = {}
-    
-    function window:CreateTab(tabName, tabIcon)
-        local tab = {}
-        tab.Name = tabName
-        tab.Icon = tabIcon
-        tab.Elements = {}
-        
-        function tab:CreateButton(buttonName, callback)
-            local button = Instance.new("TextButton")
-            button.Name = buttonName
-            button.Text = buttonName
-            button.Size = UDim2.new(0, 200, 0, 50)
-            
-            -- Parent button to the ScreenGui (Window) after it's created
-            button.Parent = game.Players.LocalPlayer.PlayerGui:WaitForChild(window.Name)
-            
-            button.MouseButton1Click:Connect(function()
-                callback()
-            end)
-            
-            table.insert(self.Elements, button)
-        end
-        
-        function tab:CreateToggle(toggleName, callback)
-            local toggleEnabled = false
-            local toggle = Instance.new("TextButton")
-            toggle.Name = toggleName
-            toggle.Text = toggleName
-            toggle.Size = UDim2.new(0, 80, 0, 40)
-            
-            -- Parent toggle to the ScreenGui (Window) after it's created
-            toggle.Parent = game.Players.LocalPlayer.PlayerGui:WaitForChild(window.Name)
-            
-            toggle.MouseButton1Click:Connect(function()
-                toggleEnabled = not toggleEnabled
-                callback(toggleEnabled)
-            end)
-            
-            table.insert(self.Elements, toggle)
-        end
-        
-        table.insert(self.Tabs, tab)
-        return tab
-    end
-    
-    function window:Display()
-        local screenGui = Instance.new("ScreenGui")
-        screenGui.Name = self.Name
-        screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-        
-        -- Create buttons for each tab in the ScreenGui
-        for _, tab in ipairs(self.Tabs) do
-            local tabButton = Instance.new("TextButton")
-            tabButton.Name = tab.Name
-            tabButton.Text = tab.Name
-            tabButton.Size = UDim2.new(0, 100, 0, 50)
-            tabButton.Parent = screenGui
-            
-            tabButton.MouseButton1Click:Connect(function()
-                for _, element in ipairs(tab.Elements) do
-                    element.Visible = not element.Visible
-                end
-            end)
-        end
-    end
-    
-    return window
+local Library ={}
+function Library:CreateWindow(name)
+    local Window = Instance.new("ScreenGui")
+    Window.Name = name
+    Window.Parent = game.CoreGui
+    return Window
 end
 
-return UiLibrary
+function Library:CreateFrame(name)
+    local Frame = Instance.new("Frame")
+    Frame.Name = name
+    Frame.Parent = Window
+    Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    Frame.BackgroundTransparency = 0.7
+    Frame.BorderSizePixel = 0
+    Frame.Position = UDim2.new(0.5, -Frame.Size.X.Offset/2, 0.5, -Frame.Size.Y.Offset/2)
+    Frame.Size = UDim2.new(0, Frame.Size.X.Offset, 0, Frame.Size.Y.Offset)
+    Frame.ClipsDescendants = true
+    return Frame
+end
+function Library:CreateLabel(name, text)
+    local Label = Instance.new("TextLabel")
+    Label.Name = name
+    Label.Parent = Frame
+    Label.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    Label.BackgroundTransparency = 0.7
+    Label.BorderSizePixel = 0
+    Label.Position = UDim2.new(0, 0, 0, 0)
+    Label.Size = UDim2.new(1, 0, 0, 0)
+    Label.Font = Enum.Font.GothamBold
+    Label.Text = text
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.TextScaled = true
+    Label.TextWrapped = true
+    return Label
+end
+function Library:CreateButton(name, text, callback)
+    local Button = Instance.new("TextButton")
+    Button.Name = name
+    Button.Parent = Frame
+    Button.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    Button.BackgroundTransparency = 0.7
+    Button.BorderSizePixel = 0
+    Button.Position = UDim2.new(0, 0, 0, 0)
+    Button.Size = UDim2.new(1, 0, 0, 0)
+    Button.Font = Enum.Font.GothamBold
+    Button.Text = text
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.TextScaled = true
+    Button.TextWrapped = true
+    Button.MouseButton1Click:Connect(callback)
+    return Button
+end
+function Library:CreateToggle(name, text, callback)
+    local Toggle = Instance.new("TextButton")
+    Toggle.Name = name
+    Toggle.Parent = Frame
+    Toggle.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    Toggle.BackgroundTransparency = 0.7
+    Toggle.BorderSizePixel = 0
+    Toggle.Position = UDim2.new(0, 0, 0, 0)
+    Toggle.Size = UDim2.new(1, 0, 0, 0)
+    Toggle.Font = Enum.Font.GothamBold
+    Toggle.Text = text
+    Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Toggle.TextScaled = true
+    Toggle.TextWrapped = true
+    Toggle.MouseButton1Click:Connect(callback)
+    return Toggle
+end
+
+-- UI Setup for the Galaxy-Themed Button
+function Library:CreateGalaxyButton(name, text, callback)
+    local ScreenGui = Instance.new("ScreenGui")
+    local GalaxyButton = Instance.new("TextButton")
+    local ButtonText = Instance.new("TextLabel")
+    local UIGradient = Instance.new("UIGradient")
+    local UICorner = Instance.new("UICorner")
+    local UIPadding = Instance.new("UIPadding")
+
+    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+    -- Galaxy Button
+    GalaxyButton.Parent = ScreenGui
+    GalaxyButton.Name = name
+    GalaxyButton.Size = UDim2.new(0, 200, 0, 50)
+    GalaxyButton.Position = UDim2.new(0, 100, 0, 200)
+    GalaxyButton.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
+    GalaxyButton.BorderSizePixel = 0
+    GalaxyButton.Text = ""
+    GalaxyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    GalaxyButton.TextScaled = true
+    GalaxyButton.TextStrokeTransparency = 1  -- Hide default stroke
+    GalaxyButton.TextWrapped = true
+
+    -- Button Text
+    ButtonText.Parent = GalaxyButton
+    ButtonText.Size = UDim2.new(1, 0, 1, 0)
+    ButtonText.Position = UDim2.new(0, 0, 0, 0)
+    ButtonText.BackgroundTransparency = 1
+    ButtonText.Text = text
+    ButtonText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ButtonText.TextStrokeTransparency = 0.5
+    ButtonText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    ButtonText.TextScaled = true
+    ButtonText.TextWrapped = true
+
+    -- Gradient Background for the Button
+    UIGradient.Parent = GalaxyButton
+    UIGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 30)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(50, 0, 100)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 0, 150))
+    }
+    UIGradient.Rotation = 45
+
+    -- Gradient for the Text
+    local TextGradient = Instance.new("UIGradient")
+    TextGradient.Parent = ButtonText
+    TextGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),  -- White
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 150, 255)),  -- Light Blue
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 255))     -- Magenta
+    }
+    TextGradient.Rotation = 45
+
+    -- Corner Rounding
+    UICorner.CornerRadius = UDim.new(0, 25)
+    UICorner.Parent = GalaxyButton
+
+    -- Padding
+    UIPadding.Parent = GalaxyButton
+    UIPadding.PaddingLeft = UDim.new(0, 10)
+    UIPadding.PaddingRight = UDim.new(0, 10)
+    UIPadding.PaddingTop = UDim.new(0, 5)
+    UIPadding.PaddingBottom = UDim.new(0, 5)
+
+    -- Animation Function
+    local function buttonAnimation()
+        local tweenService = game:GetService("TweenService")
+
+        -- Tween info for hover effect
+        local hoverTweenInfo = TweenInfo.new(
+            0.3, -- Time
+            Enum.EasingStyle.Quad, -- EasingStyle
+            Enum.EasingDirection.Out -- EasingDirection
+        )
+
+        local hoverGoal = {BackgroundColor3 = Color3.fromRGB(255, 100, 200)}
+
+        -- Tween info for non-hover effect
+        local normalTweenInfo = TweenInfo.new(
+            0.3, -- Time
+            Enum.EasingStyle.Quad, -- EasingStyle
+            Enum.EasingDirection.Out -- EasingDirection
+        )
+
+        local normalGoal = {BackgroundColor3 = Color3.fromRGB(20, 20, 40)}
+
+        local hoverTween = tweenService:Create(GalaxyButton, hoverTweenInfo, hoverGoal)
+        local normalTween = tweenService:Create(GalaxyButton, normalTweenInfo, normalGoal)
+
+        GalaxyButton.MouseEnter:Connect(function()
+            hoverTween:Play()
+        end)
+
+        GalaxyButton.MouseLeave:Connect(function()
+            normalTween:Play()
+        end)
+    end
+
+    -- Initialize button animation
+    buttonAnimation()
+    GalaxyButton.MouseButton1Click:Connect(callback)
+    return GalaxyButton
+end
+return Library
