@@ -1,141 +1,135 @@
-local GUIBuilder = {}
+local MyUILib = {}
 
--- Function to create a new ScreenGui
-function GUIBuilder.newScreenGui()
-    local gui = Instance.new("ScreenGui")
-    return gui
-end
+function MyUILib:MakeWindow(config)
+    local window = {}
+    
+    local ScreenGui = Instance.new("ScreenGui")
+    local Frame = Instance.new("Frame")
+    local TitleLabel = Instance.new("TextLabel")
+    local TabContainer = Instance.new("Frame")
+    local UIListLayout = Instance.new("UIListLayout")
 
--- Function to create a new Frame
-function GUIBuilder.newFrame(parent)
-    local frame = Instance.new("Frame")
-    frame.Parent = parent
-    return frame
-end
+    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    ScreenGui.ResetOnSpawn = false
 
--- Function to create a new TextButton
-function GUIBuilder.newTextButton(parent, text, callback)
-    local button = Instance.new("TextButton")
-    button.Parent = parent
-    button.Text = text
-    button.MouseButton1Click:Connect(callback)
-    return button
-end
+    Frame.Parent = ScreenGui
+    Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    Frame.Position = UDim2.new(0.3, 0, 0.2, 0)
+    Frame.Size = UDim2.new(0, 500, 0, 400)
+    Frame.ClipsDescendants = true
 
--- Function to create a new TextLabel
-function GUIBuilder.newTextLabel(parent, text)
-    local label = Instance.new("TextLabel")
-    label.Parent = parent
-    label.Text = text
-    return label
-end
+    TitleLabel.Parent = Frame
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.Position = UDim2.new(0.05, 0, 0.05, 0)
+    TitleLabel.Size = UDim2.new(0.9, 0, 0.1, 0)
+    TitleLabel.Font = Enum.Font.GothamBold
+    TitleLabel.Text = config.Name or "UI Library"
+    TitleLabel.TextColor3 = Color3.fromRGB(232, 232, 232)
+    TitleLabel.TextScaled = true
 
--- Function to add a dropdown
-function GUIBuilder.addDropdown(tab, options)
-    local dropdownButton = GUIBuilder.newTextButton(tab.Frame, options.Name, function()
-        dropdownFrame.Visible = not dropdownFrame.Visible
-    end)
+    TabContainer.Parent = Frame
+    TabContainer.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    TabContainer.Position = UDim2.new(0.05, 0, 0.2, 0)
+    TabContainer.Size = UDim2.new(0.9, 0, 0.1, 0)
+    TabContainer.ClipsDescendants = true
 
-    local dropdownFrame = GUIBuilder.newFrame(tab.Frame)
-    dropdownFrame.Size = UDim2.new(0, 100, 0, 120)
-    dropdownFrame.Position = UDim2.new(0, 10, 0, 40)
-    dropdownFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    dropdownFrame.BorderSizePixel = 0
-    dropdownFrame.Visible = false
+    UIListLayout.Parent = TabContainer
+    UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.Padding = UDim.new(0.05, 0)
 
-    local defaultOption = options.Default or options.Options[1]
-    local dropdownButton = GUIBuilder.newTextButton(dropdownFrame, defaultOption, function()
-        dropdownFrame.Visible = not dropdownFrame.Visible
-    end)
+    function window:MakeTab(config)
+        local tab = {}
+        local TabButton = Instance.new("TextButton")
+        local ContentFrame = Instance.new("Frame")
 
-    local dropdownOptions = options.Options
-    for i, optionText in ipairs(dropdownOptions) do
-        local optionButton = GUIBuilder.newTextButton(dropdownFrame, optionText, function()
-            dropdownButton.Text = optionText
-            dropdownFrame.Visible = false
-            if options.Callback then
-                options.Callback(optionText)
-            end
-        end)
-        optionButton.Position = UDim2.new(0, 0, 0, (i - 1) * 30)
-    end
-end
+        TabButton.Parent = TabContainer
+        TabButton.Size = UDim2.new(0, 100, 0, 40)
+        TabButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+        TabButton.Text = config.Name or "Tab"
+        TabButton.TextColor3 = Color3.fromRGB(232, 232, 232)
+        TabButton.Font = Enum.Font.GothamBold
+        TabButton.TextSize = 12
+        TabButton.BorderSizePixel = 0
 
--- Function to add a toggle
-function GUIBuilder.addToggle(tab, options)
-    local toggleButton = GUIBuilder.newTextButton(tab.Frame, options.Name, function()
-        options.Callback(not toggleButton.Enabled)
-        toggleButton.Enabled = not toggleButton.Enabled
-    end)
-    toggleButton.Enabled = options.Default
-end
+        ContentFrame.Parent = Frame
+        ContentFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        ContentFrame.Size = UDim2.new(1, 0, 1, -100)
+        ContentFrame.Position = UDim2.new(0, 0, 0.3, 0)
+        ContentFrame.Visible = false
 
--- Function to add a button
-function GUIBuilder.addButton(tab, options)
-    local button = GUIBuilder.newTextButton(tab.Frame, options.Name, options.Callback)
-    button.BackgroundColor3 = options.BackgroundColor or Color3.fromRGB(255, 255, 255)
-    button.BorderSizePixel = options.BorderSizePixel or 1
-    button.TextColor3 = options.TextColor or Color3.fromRGB(0, 0, 0)
-end
-
--- Function to add a tab
-function GUIBuilder.addTab(window, options)
-    local tab = {
-        Name = options.Name,
-        Frame = GUIBuilder.newFrame(window.GUI),
-        AddDropdown = function(self, dropdownOptions)
-            GUIBuilder.addDropdown(self, dropdownOptions)
-        end,
-        AddToggle = function(self, toggleOptions)
-            GUIBuilder.addToggle(self, toggleOptions)
-        end,
-        AddButton = function(self, buttonOptions)
-            GUIBuilder.addButton(self, buttonOptions)
-        end
-    }
-    tab.Frame.Visible = false
-    return tab
-end
-
--- Function to create a window
-function GUIBuilder.newWindow(options)
-    local window = {
-        Name = options.Name,
-        GUI = GUIBuilder.newScreenGui(),
-        AddTab = function(self, tabOptions)
-            return GUIBuilder.addTab(self, tabOptions)
-        end
-    }
-
-    -- Dragging functionality
-    local dragInput
-    local dragStart
-    local startPos
-
-    local function update(input)
-        local delta = input.Position - dragStart
-        window.GUI.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-
-    window.GUI.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragStart = input.Position
-            startPos = window.GUI.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragInput = nil
+        TabButton.MouseButton1Click:Connect(function()
+            for _, v in pairs(Frame:GetChildren()) do
+                if v:IsA("Frame") and v ~= TabContainer then
+                    v.Visible = false
                 end
+            end
+            ContentFrame.Visible = true
+        end)
+
+        function tab:AddButton(config)
+            local Button = Instance.new("TextButton")
+            Button.Parent = ContentFrame
+            Button.Size = UDim2.new(0, 200, 0, 50)
+            Button.Position = UDim2.new(0.5, -100, 0, 0)
+            Button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            Button.Text = config.Name or "Button"
+            Button.TextColor3 = Color3.fromRGB(232, 232, 232)
+            Button.Font = Enum.Font.GothamBold
+            Button.TextSize = 14
+            Button.BorderSizePixel = 0
+
+            Button.MouseButton1Click:Connect(function()
+                pcall(config.Callback)
             end)
         end
-    end)
 
-    window.GUI.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
+        function tab:AddToggle(config)
+            local ToggleButton = Instance.new("TextButton")
+            local ToggleKnob = Instance.new("Frame")
+            
+            ToggleButton.Parent = ContentFrame
+            ToggleButton.Size = UDim2.new(0, 80, 0, 40)
+            ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            ToggleButton.Text = config.Name or "Toggle"
+            ToggleButton.TextColor3 = Color3.fromRGB(232, 232, 232)
+            ToggleButton.Font = Enum.Font.GothamBold
+            ToggleButton.TextSize = 12
+            ToggleButton.BorderSizePixel = 0
+
+            ToggleKnob.Parent = ToggleButton
+            ToggleKnob.Size = UDim2.new(0, 36, 1, -4)
+            ToggleKnob.Position = UDim2.new(config.Default and 1 or 0, config.Default and -38 or 2, 0, 2)
+            ToggleKnob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            ToggleKnob.BorderSizePixel = 0
+
+            local toggleEnabled = config.Default or false
+
+            local function toggleAnimation(isEnabled)
+                if isEnabled then
+                    ToggleKnob:TweenPosition(UDim2.new(1, -38, 0, 2), "Out", "Quad", 0.3, true)
+                    ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+                else
+                    ToggleKnob:TweenPosition(UDim2.new(0, 2, 0, 2), "Out", "Quad", 0.3, true)
+                    ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                end
+            end
+
+            ToggleButton.MouseButton1Click:Connect(function()
+                toggleEnabled = not toggleEnabled
+                toggleAnimation(toggleEnabled)
+                pcall(config.Callback, toggleEnabled)
+            end)
+
+            -- Initial state animation
+            toggleAnimation(toggleEnabled)
         end
-    end)
+
+        return tab
+    end
 
     return window
 end
 
-return GUIBuilder
+return MyUILib
