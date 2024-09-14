@@ -486,7 +486,7 @@ Toggle.Size = UDim2.new(0, 430, 0, 35)
 
 -- Toggle Button
 ToggleButton.Parent = ToggleText
-ToggleButton.Size = UDim2.new(0, 75, 0, 38)  -- Adjusted size
+ToggleButton.Size = UDim2.new(0, 55, 0, 30)  -- Adjusted size
 ToggleButton.Position = UDim2.new(0, 345, 0, 0)
 ToggleButton.BackgroundColor3 = Color3.new(0, 0, 0)
 ToggleButton.BorderSizePixel = 0
