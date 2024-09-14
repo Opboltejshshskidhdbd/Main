@@ -399,7 +399,7 @@ Toggle.Size = UDim2.new(0, 430, 0, 35)
   ToggleText.TextXAlignment = Enum.TextXAlignment.Left -- Aligning text to the left
   ToggleText.ClipsDescendants = true -- Clips text that overflows
   ToggleText.ZIndex = 255
-  ToggleText.BackgroundTransparency = 1
+ 
 
   -- Adding a UIGradient for the text with white, cyan, blue, purple, and pink
   uiGradient.Color = ColorSequence.new{
@@ -580,7 +580,7 @@ local Toggle1 = Tab1:Toggle({
   })
 
 local toggle2 = Tab1:Toggle({
-    Text = "Toggle2",
+    Text = "Toggle2 abcd efg g se nikle",
     Callback = function()
       print("hi")
     end
