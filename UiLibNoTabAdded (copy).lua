@@ -380,7 +380,7 @@ local glowPulse = Instance.new("Frame")
 
 Toggle.Name = "Toggle"
 Toggle.Parent = ScrollingFrame
-Toggle.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+Toggle.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 Toggle.BackgroundTransparency = 0
 Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Toggle.BorderSizePixel = 0
@@ -399,6 +399,7 @@ Toggle.Size = UDim2.new(0, 430, 0, 35)
   ToggleText.TextXAlignment = Enum.TextXAlignment.Left -- Aligning text to the left
   ToggleText.ClipsDescendants = true -- Clips text that overflows
   ToggleText.ZIndex = 255
+  ToggleText.BackgroundTransparency = 1
 
   -- Adding a UIGradient for the text with white, cyan, blue, purple, and pink
   uiGradient.Color = ColorSequence.new{
