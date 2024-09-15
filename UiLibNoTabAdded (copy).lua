@@ -1,4 +1,4 @@
-_G.Main = {}
+l_G.Main = {}
 
 function _G.Main:New(Title)
 
@@ -399,7 +399,6 @@ Toggle.Size = UDim2.new(0, 430, 0, 35)
   ToggleText.TextXAlignment = Enum.TextXAlignment.Left -- Aligning text to the left
   ToggleText.ClipsDescendants = true -- Clips text that overflows
   ToggleText.ZIndex = 255
-  ToggleText.BackgroundTransparency = 1
 
   -- Adding a UIGradient for the text with white, cyan, blue, purple, and pink
   uiGradient.Color = ColorSequence.new{
@@ -485,7 +484,7 @@ Toggle.Size = UDim2.new(0, 430, 0, 35)
   glowTween:Play()
 
 -- Toggle Button
-ToggleButton.Parent = ToggleText
+ToggleButton.Parent = glowGradient
 ToggleButton.Size = UDim2.new(0, 75, 0, 38)  -- Adjusted size
 ToggleButton.Position = UDim2.new(0, 345, 0, 0)
 ToggleButton.BackgroundColor3 = Color3.new(0, 0, 0)
