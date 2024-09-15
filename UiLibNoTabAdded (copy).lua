@@ -381,7 +381,7 @@ function _G.Frame:Toggle(conpig)
     -- Main Toggle Frame
     Toggle.Name = "Toggle"
     Toggle.Parent = ScrollingFrame
-    Toggle.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    Toggle.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     Toggle.BackgroundTransparency = 0
     Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Toggle.BorderSizePixel = 0
