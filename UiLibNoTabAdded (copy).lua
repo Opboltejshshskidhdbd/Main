@@ -380,7 +380,7 @@ local glowPulse = Instance.new("Frame")
 
 Toggle.Name = "Toggle"
 Toggle.Parent = ScrollingFrame
-Toggle.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+Toggle.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 Toggle.BackgroundTransparency = 0
 Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Toggle.BorderSizePixel = 0
@@ -486,7 +486,7 @@ Toggle.Size = UDim2.new(0, 430, 0, 35)
 
 -- Toggle Button
 ToggleButton.Parent = ToggleText
-ToggleButton.Size = UDim2.new(0, 75, 0, 38)  -- Adjusted size
+ToggleButton.Size = UDim2.new(0, 70, 0, 36)  -- Adjusted size
 ToggleButton.Position = UDim2.new(0, 345, 0, 0)
 ToggleButton.BackgroundColor3 = Color3.new(0, 0, 0)
 ToggleButton.BorderSizePixel = 0
@@ -494,7 +494,7 @@ ToggleButton.Text = ""
 
 -- Knob
 ToggleKnob.Parent = ToggleButton
-ToggleKnob.Size = UDim2.new(0, 36, 1, -4)  -- Adjusted size
+ToggleKnob.Size = UDim2.new(0, 34, 1, -3)  -- Adjusted size
 ToggleKnob.Position = UDim2.new(0, 2, 0, 2)
 ToggleKnob.BackgroundColor3 = Color3.new(1, 1, 1)
 ToggleKnob.BorderSizePixel = 0
