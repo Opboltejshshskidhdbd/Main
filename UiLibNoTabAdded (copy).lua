@@ -1,4 +1,4 @@
-l_G.Main = {}
+_G.Main = {}
 
 function _G.Main:New(Title)
 
