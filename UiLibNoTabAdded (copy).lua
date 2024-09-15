@@ -361,187 +361,184 @@ function _G.Frame:AnimatedLabel(Text)
     end
 
 function _G.Frame:Toggle(conpig)
-          conpig = conpig or {}
-                        conpig.Text = conpig.Text
-                        conpig.Callback = conpig.Callback or function(a) print(a) end
+    conpig = conpig or {}
+    conpig.Text = conpig.Text
+    conpig.Callback = conpig.Callback or function(a) print(a) end
 
-local ToggleButton = Instance.new("TextButton")
-local ToggleKnob = Instance.new("Frame")
-local UIGradient = Instance.new("UIGradient")
-local UICorner = Instance.new("UICorner")
-local Toggle = Instance.new("Frame")
-local ToggleText = Instance.new("TextLabel")
-local uiGradient = Instance.new("UIGradient")
-local outline = Instance.new("Frame")
-local shineFrame = Instance.new("Frame")
-local shineGradient = Instance.new("UIGradient")
-local glowPulse = Instance.new("Frame")
+    -- Instances
+    local ToggleButton = Instance.new("TextButton")
+    local ToggleKnob = Instance.new("Frame")
+    local UIGradient = Instance.new("UIGradient")
+    local UICorner = Instance.new("UICorner")
+    local Toggle = Instance.new("Frame")
+    local ToggleText = Instance.new("TextLabel")
+    local uiGradient = Instance.new("UIGradient")
+    local outline = Instance.new("Frame")
+    local shineFrame = Instance.new("Frame")
+    local shineGradient = Instance.new("UIGradient")
+    local glowPulse = Instance.new("Frame")
 
+    -- Main Toggle Frame
+    Toggle.Name = "Toggle"
+    Toggle.Parent = ScrollingFrame
+    Toggle.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    Toggle.BackgroundTransparency = 0
+    Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Toggle.BorderSizePixel = 0
+    Toggle.Size = UDim2.new(0, 430, 0, 35)
 
-Toggle.Name = "Toggle"
-Toggle.Parent = ScrollingFrame
-Toggle.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-Toggle.BackgroundTransparency = 0
-Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
-Toggle.BorderSizePixel = 0
-Toggle.Size = UDim2.new(0, 430, 0, 35)
+    -- Toggle Text Setup
+    ToggleText.Parent = Toggle
+    ToggleText.Size = UDim2.new(1, 0, 0, 34)
+    ToggleText.Position = UDim2.new(0, 0, 0, 0)
+    ToggleText.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    ToggleText.BorderSizePixel = 0
+    ToggleText.Text = "   "..tostring(conpig.Text)
+    ToggleText.Font = Enum.Font.GothamBlack
+    ToggleText.TextSize = 20
+    ToggleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleText.TextXAlignment = Enum.TextXAlignment.Left
+    ToggleText.ClipsDescendants = true
+    ToggleText.ZIndex = 255
+    ToggleText.BackgroundTransparency = 1
 
-  -- Setting up the TextLabel
-  ToggleText.Parent = Toggle
-  ToggleText.Size = UDim2.new(1, 0, 0, 34) -- Adjust the size as needed
-  ToggleText.Position = UDim2.new(0, 0, 0, 0) -- Adjust the position as needed
-  ToggleText.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Dark background
-  ToggleText.BorderSizePixel = 0
-  ToggleText.Text = "   "..tostring(conpig.Text)
-  ToggleText.Font = Enum.Font.GothamBlack
-  ToggleText.TextSize = 20 -- Bigger text for a more striking look
-  ToggleText.TextColor3 = Color3.fromRGB(255, 255, 255)
-  ToggleText.TextXAlignment = Enum.TextXAlignment.Left -- Aligning text to the left
-  ToggleText.ClipsDescendants = true -- Clips text that overflows
-  ToggleText.ZIndex = 255
-  ToggleText.BackgroundTransparency = 1
+    -- Galaxy-themed gradient for the text
+    uiGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(0.20, Color3.fromRGB(0, 255, 255)),
+        ColorSequenceKeypoint.new(0.40, Color3.fromRGB(0, 102, 255)),
+        ColorSequenceKeypoint.new(0.60, Color3.fromRGB(153, 51, 255)),
+        ColorSequenceKeypoint.new(0.80, Color3.fromRGB(255, 102, 178)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))
+    }
+    uiGradient.Rotation = 90
+    uiGradient.Parent = ToggleText
 
-  -- Adding a UIGradient for the text with white, cyan, blue, purple, and pink
-  uiGradient.Color = ColorSequence.new{
-      ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-      ColorSequenceKeypoint.new(0.20, Color3.fromRGB(0, 255, 255)),
-      ColorSequenceKeypoint.new(0.40, Color3.fromRGB(0, 102, 255)),
-      ColorSequenceKeypoint.new(0.60, Color3.fromRGB(153, 51, 255)),
-      ColorSequenceKeypoint.new(0.80, Color3.fromRGB(255, 102, 178)),
-      ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))
-  }
-  uiGradient.Rotation = 90 -- Vertical gradient
-  uiGradient.Parent = ToggleText
+    -- Rotating animation for text gradient
+    local rotationTweenInfo = TweenInfo.new(2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true)
+    local rotationGoal = {Rotation = 360}
+    local rotationTween = game:GetService("TweenService"):Create(uiGradient, rotationTweenInfo, rotationGoal)
+    rotationTween:Play()
 
-  -- Gradient rotation animation
+    -- Glow outline around the toggle
+    outline.Parent = Toggle
+    outline.Size = ToggleText.Size + UDim2.new(0, 20, 0, 20)
+    outline.Position = ToggleText.Position - UDim2.new(0, 10, 0, 10)
+    outline.BackgroundTransparency = 1
+    outline.ZIndex = 1
 
-  -- Gradient rotation animation
-  local rotationTweenInfo = TweenInfo.new(2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true)
-  local rotationGoal = {Rotation = 360}
-  local rotationTween = game:GetService("TweenService"):Create(uiGradient, rotationTweenInfo, rotationGoal)
-  rotationTween:Play()
+    local outlineGradient = Instance.new("UIGradient")
+    outlineGradient.Color = uiGradient.Color
+    outlineGradient.Rotation = 45
+    outlineGradient.Parent = outline
 
-  -- Adding a glowing outline with the same color palette
-  outline.Parent = Parent
-  outline.Size = ToggleText.Size + UDim2.new(0, 20, 0, 20)
-  outline.Position = ToggleText.Position - UDim2.new(0, 10, 0, 10)
-  outline.BackgroundTransparency = 1
-  outline.ZIndex = 1
+    local outlineTweenInfo = TweenInfo.new(6, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true)
+    local outlineGoal = {Rotation = 360}
+    local outlineTween = game:GetService("TweenService"):Create(outlineGradient, outlineTweenInfo, outlineGoal)
+    outlineTween:Play()
 
-  local outlineGradient = Instance.new("UIGradient")
-  outlineGradient.Color = uiGradient.Color
-  outlineGradient.Rotation = 45
-  outlineGradient.Parent = outline
+    -- Shine effect across the toggle
+    shineFrame.Parent = ToggleText
+    shineFrame.Size = UDim2.new(2, 0, 1, 0)
+    shineFrame.BackgroundTransparency = 1
+    shineFrame.ZIndex = 3
 
-  -- Outline rotation animation
-  local outlineTweenInfo = TweenInfo.new(6, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true)
-  local outlineGoal = {Rotation = 360}
-  local outlineTween = game:GetService("TweenService"):Create(outlineGradient, outlineTweenInfo, outlineGoal)
-  outlineTween:Play()
+    shineGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))
+    }
+    shineGradient.Transparency = NumberSequence.new{
+        NumberSequenceKeypoint.new(0.00, 1),
+        NumberSequenceKeypoint.new(0.25, 0.7),
+        NumberSequenceKeypoint.new(0.50, 0),
+        NumberSequenceKeypoint.new(0.75, 0.7),
+        NumberSequenceKeypoint.new(1.00, 1)
+    }
+    shineGradient.Rotation = 45
+    shineGradient.Parent = shineFrame
 
-  -- Adding a shine effect
-  shineFrame.Parent = ToggleText
-  shineFrame.Size = UDim2.new(2, 0, 1, 0) -- Bigger than the label for smooth sliding
-  shineFrame.BackgroundTransparency = 1
-  shineFrame.ZIndex = 3
+    -- Shine animation
+    local shineTweenInfo = TweenInfo.new(2.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+    local shineGoal = {Position = UDim2.new(-1, 0, 0, 0)}
+    local shineTween = game:GetService("TweenService"):Create(shineFrame, shineTweenInfo, shineGoal)
+    shineTween:Play()
 
-  shineGradient.Color = ColorSequence.new{
-      ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-      ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 255, 255)),
-      ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))
-  }
-  shineGradient.Transparency = NumberSequence.new{
-      NumberSequenceKeypoint.new(0.00, 1),
-      NumberSequenceKeypoint.new(0.25, 0.7),
-      NumberSequenceKeypoint.new(0.50, 0),
-      NumberSequenceKeypoint.new(0.75, 0.7),
-      NumberSequenceKeypoint.new(1.00, 1)
-  }
-  shineGradient.Rotation = 45
-  shineGradient.Parent = shineFrame
+    -- Glow pulse around text
+    glowPulse.Parent = Toggle
+    glowPulse.Size = ToggleText.Size + UDim2.new(0, 30, 0, 30)
+    glowPulse.Position = ToggleText.Position - UDim2.new(0, 15, 0, 15)
+    glowPulse.BackgroundTransparency = 1
+    glowPulse.ZIndex = 0
 
-  -- Shine animation
-  local shineTweenInfo = TweenInfo.new(2.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
-  local shineGoal = {Position = UDim2.new(-1, 0, 0, 0)}
-  local shineTween = game:GetService("TweenService"):Create(shineFrame, shineTweenInfo, shineGoal)
-  shineTween:Play()
+    local glowGradient = Instance.new("UIGradient")
+    glowGradient.Color = uiGradient.Color
+    glowGradient.Rotation = 90
+    glowGradient.Parent = glowPulse
 
-  -- Adding a glow pulse effect around the text
-  glowPulse.Parent = Parent
-  glowPulse.Size = ToggleText.Size + UDim2.new(0, 30, 0, 30)
-  glowPulse.Position = ToggleText.Position - UDim2.new(0, 15, 0, 15)
-  glowPulse.BackgroundTransparency = 1
-  glowPulse.ZIndex = 0
+    -- Glow pulse animation
+    local glowTweenInfo = TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+    local glowGoal = {Rotation = 180}
+    local glowTween = game:GetService("TweenService"):Create(glowGradient, glowTweenInfo, glowGoal)
+    glowTween:Play()
 
-  local glowGradient = Instance.new("UIGradient")
-  glowGradient.Color = uiGradient.Color
-  glowGradient.Rotation = 90
-  glowGradient.Parent = glowPulse
+    -- Toggle Button
+    ToggleButton.Parent = ToggleText
+    ToggleButton.Size = UDim2.new(0, 70, 0, 36)
+    ToggleButton.Position = UDim2.new(0, 345, 0, 0)
+    ToggleButton.BackgroundColor3 = Color3.new(0, 0, 0)
+    ToggleButton.BorderSizePixel = 0
+    ToggleButton.Text = ""
 
-  -- Glow animation
-  local glowTweenInfo = TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
-  local glowGoal = {Rotation = 180}
-  local glowTween = game:GetService("TweenService"):Create(glowGradient, glowTweenInfo, glowGoal)
-  glowTween:Play()
+    -- Knob
+    ToggleKnob.Parent = ToggleButton
+    ToggleKnob.Size = UDim2.new(0, 34, 1, -3)
+    ToggleKnob.Position = UDim2.new(0, 2, 0, 2)
+    ToggleKnob.BackgroundColor3 = Color3.new(1, 1, 1)
+    ToggleKnob.BorderSizePixel = 0
 
--- Toggle Button
-ToggleButton.Parent = ToggleText
-ToggleButton.Size = UDim2.new(0, 70, 0, 36)  -- Adjusted size
-ToggleButton.Position = UDim2.new(0, 345, 0, 0)
-ToggleButton.BackgroundColor3 = Color3.new(0, 0, 0)
-ToggleButton.BorderSizePixel = 0
-ToggleButton.Text = ""
+    -- Gradient Background for the Button
+    UIGradient.Parent = ToggleButton
+    UIGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 50)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(50, 0, 100)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 0, 150))
+    }
 
--- Knob
-ToggleKnob.Parent = ToggleButton
-ToggleKnob.Size = UDim2.new(0, 34, 1, -3)  -- Adjusted size
-ToggleKnob.Position = UDim2.new(0, 2, 0, 2)
-ToggleKnob.BackgroundColor3 = Color3.new(1, 1, 1)
-ToggleKnob.BorderSizePixel = 0
+    -- Rounded corners for the button
+    UICorner.CornerRadius = UDim.new(0, 20)
+    UICorner.Parent = ToggleButton
 
--- Gradient Background for the Button
-UIGradient.Parent = ToggleButton
-UIGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 50)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(50, 0, 100)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 0, 150))
-}
+    -- Rounded corners for the knob
+    local KnobCorner = UICorner:Clone()
+    KnobCorner.Parent = ToggleKnob
 
--- Corner Rounding
-UICorner.CornerRadius = UDim.new(0, 20)
-UICorner.Parent = ToggleButton
-
--- Corner Rounding for the Knob
-local KnobCorner = UICorner:Clone()
-KnobCorner.Parent = ToggleKnob
-
--- Animation Function
-local function toggleAnimation(isEnabled)
-    if isEnabled then
-        ToggleKnob:TweenPosition(
-            UDim2.new(1, -38, 0, 2),  -- Adjusted knob position
-            "Out", "Quad", 0.3, true
-        )
-        UIGradient.Color = ColorSequence.new{
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 50, 0)),
-            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 100, 50)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 150, 100))
-        }
-        ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)  -- Green color for enabled
-    else
-        ToggleKnob:TweenPosition(
-            UDim2.new(0, 2, 0, 2),  -- Adjusted knob position
-            "Out", "Quad", 0.3, true
-        )
-        UIGradient.Color = ColorSequence.new{
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(50, 0, 0)),
-            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(100, 50, 0)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 100, 0))
-        }
-        ToggleButton.BackgroundColor3 = Color3.new(0, 0, 0)  -- Black color for disabled
-    end
-end
-
+    -- Toggle Animation
+    local function toggleAnimation(isEnabled)
+        if isEnabled then
+            ToggleKnob:TweenPosition(
+                UDim2.new(1, -38, 0, 2),  -- Knob moves to right
+                "Out", "Quad", 0.3, true
+            )
+            UIGradient.Color = ColorSequence.new{
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 50, 0)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 100, 50)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 150, 100))
+            }
+            ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+        else
+            ToggleKnob:TweenPosition(
+                UDim2.new(0, 2, 0, 2),  -- Knob moves back to left
+                "Out", "Quad", 0.3, true
+            )
+            UIGradient.Color = ColorSequence.new{
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(50, 0, 0)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(100, 0, 50)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 100))
+            }
+            ToggleButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+        end
+      end
 -- Initial toggle state
 local toggled = false
 
