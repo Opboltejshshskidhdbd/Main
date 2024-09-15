@@ -380,7 +380,7 @@ local glowPulse = Instance.new("Frame")
 
 Toggle.Name = "Toggle"
 Toggle.Parent = ScrollingFrame
-Toggle.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+Toggle.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
 Toggle.BackgroundTransparency = 0
 Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Toggle.BorderSizePixel = 0
